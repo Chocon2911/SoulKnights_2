@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
-public class Bullet : Entity, IMovement, IDamageSender, IDespawner, IDespawnByDistance, IMoveForward,
+public class Bullet : Entity, IMovement, IDamageSender, IDespawnByDistance, IMoveForward,
     IDespawnByCollide
 {
     //==========================================Variable==========================================
@@ -149,7 +149,7 @@ public class Bullet : Entity, IMovement, IDamageSender, IDespawner, IDespawnByDi
         }
 
         Util.Instance.IComponentErrorLog(transform, component.transform);
-        return -1;
+        return 0;
     }
 
     //=====================================IDespawnByCollide======================================

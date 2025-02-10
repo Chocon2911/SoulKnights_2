@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChargableBullet : Bullet, IChargeMoveSpeedSkill, IChargeScaleSkill
+public class ChargableBullet : Bullet, IChargeMoveSpeed, IChargeScale
 {
     //==========================================Variable==========================================
     [Header("Chargable")]
     [SerializeField] private InterfaceReference<IChargableBullet> user1;
-    [SerializeField] protected List<ChargeSkill> chargeSkills;
+    [SerializeField] protected List<Chargement> chargements;
 
     //==========================================Get Set===========================================
     public IChargableBullet User1 { get => user1.Value; set => user1.Value = value; }
@@ -33,14 +33,28 @@ public class ChargableBullet : Bullet, IChargeMoveSpeedSkill, IChargeScaleSkill
     }
 
     //===================================IChargeMoveSpeedSkill====================================
-    void IChargeMoveSpeedSkill.SetMoveSpeed(ChargeMoveSpeedSkill component, float value)
+    void IChargeMoveSpeed.SetMoveSpeed(ChargeMoveSpeed component, float value)
     {
-        throw new System.NotImplementedException();
+        foreach (ChargeMoveSpeed chargement in this.chargements)
+        {
+            if (component != chargement) continue;
+            this.movement.MoveSpeed = value;
+        }
+
+        Util.Instance.IComponentErrorLog(transform, component.transform);
+        return;
     }
 
     //=====================================IChargeScaleSkill======================================
-    void IChargeScaleSkill.MulChargeScale(ChargeScaleSkill component, float value)
+    void IChargeScale.MulChargeScale(ChargeScale component, float value)
     {
-        throw new System.NotImplementedException();
+        foreach (ChargeScale chargement in this.chargements)
+        {
+            if (component != chargement) continue;
+            transform.localScale *= value;
+        }
+
+        Util.Instance.IComponentErrorLog(transform, component.transform);
+        return;
     }
 }

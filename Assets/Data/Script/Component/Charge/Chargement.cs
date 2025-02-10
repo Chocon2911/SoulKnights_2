@@ -2,44 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChargeSkill : Skill
+public class Chargement : HuyMonoBehaviour
 {
     //==========================================Variable==========================================
     [Header("Charge")]
-    [SerializeField] private InterfaceReference<IChargeSkill> user1;
+    [SerializeField] private InterfaceReference<IChargement> user1;
     [SerializeField] protected List<Cooldown> chargeCDs;
     [SerializeField] protected int chargeState;
-    [SerializeField] protected bool canCharge;
+    [SerializeField] protected bool isCharging;
 
     //==========================================Get Set===========================================
-    public IChargeSkill User1 { get => user1.Value; set => user1.Value = value; }
+    public IChargement User1 { get => user1.Value; set => user1.Value = value; }
     public List<Cooldown> ChargeCDs { get => chargeCDs; set => chargeCDs = value; }
     public int ChargeState { get => chargeState; set => chargeState = value; }
-    public bool CanCharge { get => canCharge; set => canCharge = value; }
+    public bool IsCharging { get => isCharging; set => isCharging = value; }
 
     //===========================================Unity============================================
-    protected override void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
-        base.FixedUpdate();
         this.CheckingState();
     }
 
-    //==========================================Override==========================================
-    protected override void UsingSkill()
+    //============================================Use=============================================
+    protected virtual void StartingCharge()
     {
-        if (this.canCharge) return;
-        base.UsingSkill();
+        if (!this.user1.Value.CanStart(this)) return;
+        this.StartCharge();
     }
 
-    protected override void UseSkill()
+    protected virtual void StartCharge()
     {
-        this.canCharge = true;
+        this.isCharging = true;
     }
 
     //===========================================Charge===========================================
     protected virtual void Charging()
     {
-        if (!this.canCharge) return;
+        if (!this.isCharging) return;
         this.Charge();
     }
 
@@ -57,10 +56,8 @@ public class ChargeSkill : Skill
 
     protected virtual void FinishSkill()
     {
-        this.skillCD.ResetStatus();
         foreach (Cooldown cd in this.chargeCDs) cd.ResetStatus();
         this.chargeState = 0;
-        this.user1.Value.ConsumePower(this);
     }
 
     //===========================================State============================================

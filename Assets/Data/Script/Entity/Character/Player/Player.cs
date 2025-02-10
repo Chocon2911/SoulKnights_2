@@ -306,8 +306,8 @@ public class Player : Character, IMovement, IRegen, IDashSkill, IInventory, IPic
     {
         if (this.characterSkill == component)
         {
-            if (this.inventory.GetChosenWeapon() == component.ChosenWeapon) return true;
-            else return false;
+            if (this.inventory.GetChosenWeapon() == component.ChosenWeapon) return false;
+            else return true;
         }
 
         Util.Instance.IComponentErrorLog(transform, component.transform);
