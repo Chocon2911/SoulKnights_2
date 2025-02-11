@@ -6,18 +6,18 @@ public class ChargeScale : Chargement
 {
     //==========================================Variable==========================================
     [Header("Scale")]
-    [SerializeField] private InterfaceReference<IChargeScale> user2;
+    [SerializeField] private InterfaceReference<IChargeScale> user1;
     [SerializeField] protected List<float> scaleMul; // Scale Multiplier
 
     //==========================================Get Set===========================================
-    public IChargeScale User2 { get => user2.Value; set => user2.Value = value; }
+    public IChargeScale User1 { get => user1.Value; set => user1.Value = value; }
     public List<float> ScaleMul { get => scaleMul; set => scaleMul = value; }
 
     //==========================================Override==========================================
     protected override void Charge()
     {
         base.Charge();
-        IChargeScale tempUser = this.user2.Value;
+        IChargeScale tempUser = this.user1.Value;
         float value = this.scaleMul[this.chargeState - 1] * Time.fixedDeltaTime;
         tempUser.MulChargeScale(this, value);
     }

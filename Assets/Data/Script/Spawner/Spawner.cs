@@ -24,7 +24,9 @@ public abstract class Spawner : HuyMonoBehaviour
     {
         base.LoadComponents();
         this.LoadPrefabs();
+        foreach (Transform obj in this.prefabs) obj.gameObject.SetActive(false);
         this.LoadHolders();
+        foreach (Transform obj in this.holders) obj.gameObject.SetActive(false);
     }
 
     //=======================================Load Component=======================================
@@ -48,11 +50,7 @@ public abstract class Spawner : HuyMonoBehaviour
         if (this.prefabs.Count > 0) return;
         this.LoadPrefabObj();
 
-        foreach (Transform obj in this.prefabObj)
-        {
-            this.prefabs.Add(obj);
-            obj.gameObject.SetActive(false);
-        }
+        foreach (Transform obj in this.prefabObj) this.prefabs.Add(obj);
         Debug.LogWarning(transform.name + ": Load Prefabs", transform.gameObject);
     }
 
@@ -62,11 +60,7 @@ public abstract class Spawner : HuyMonoBehaviour
         if (this.holders.Count > 0) return;
         this.LoadHolderObj();
 
-        foreach (Transform obj in this.holderObj)
-        {
-            this.holders.Add(obj);
-            obj.gameObject.SetActive(false);
-        }
+        foreach (Transform obj in this.holderObj) this.holders.Add(obj);
         Debug.LogWarning(transform.name + ": Load Holders", transform.gameObject);
     }
 

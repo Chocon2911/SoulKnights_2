@@ -88,9 +88,11 @@ MonoBehaviour:
     isReady: 0
   user1:
     underlyingValue: {fileID: 774242136021842319}
-  bulletObj: {fileID: 5188376542066201020}
+  bullet: {fileID: 0}
   firePoint: {fileID: 4577950369676267269}
-  canAutoFire: 0
+  shootMode: 0
+  isCharging: 0
+  isFinish: 0
 --- !u!1 &5204353874563429012
 GameObject:
   m_ObjectHideFlags: 0

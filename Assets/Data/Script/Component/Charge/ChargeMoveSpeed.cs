@@ -6,18 +6,18 @@ public class ChargeMoveSpeed : Chargement
 {
     //==========================================Variable==========================================
     [Header("Move Speed")]
-    [SerializeField] private InterfaceReference<IChargeMoveSpeed> user2;
+    [SerializeField] private InterfaceReference<IChargeMoveSpeed> user1;
     [SerializeField] protected List<float> moveSpeeds;
 
     //==========================================Get Set===========================================
-    public IChargeMoveSpeed User2 { get => this.user2.Value; set => this.user2.Value = value; }
+    public IChargeMoveSpeed User1 { get => this.user1.Value; set => this.user1.Value = value; }
     public List<float> MoveSpeeds { get => this.moveSpeeds; set => this.moveSpeeds = value; }
 
     //==========================================Override==========================================
     protected override void IncreaseState()
     {
         base.IncreaseState();
-        IChargeMoveSpeed tempUser = this.user2.Value;
+        IChargeMoveSpeed tempUser = this.user1.Value;
         float value = this.moveSpeeds[this.chargeState - 1];
         tempUser.SetMoveSpeed(this, value);
     }

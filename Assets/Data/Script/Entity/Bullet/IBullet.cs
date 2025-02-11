@@ -6,4 +6,8 @@ public interface IBullet
 {
     Transform GetShooter(Bullet component);
     bool CanMove(Bullet component);
+    
+    // Charge
+    bool CanStartCharge(Bullet component);
+    bool CanFinishCharge(Bullet component);
 }

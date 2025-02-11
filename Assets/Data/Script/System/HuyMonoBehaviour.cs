@@ -19,6 +19,15 @@ public class HuyMonoBehaviour : MonoBehaviour
         }
     }
 
+    protected void LoadChildComponent<T>(ref T component, Transform obj, string message)
+    {
+        if (component == null || component.Equals(null))
+        {
+            component = obj.GetComponentInChildren<T>(true);
+            Debug.LogWarning(transform.name + ": " + message, transform.gameObject);
+        }
+    }
+
     protected virtual void LoadComponent<T>(ref List<T> components, Transform obj, string message)
     {
         if (components.Count > 0) components.Clear();

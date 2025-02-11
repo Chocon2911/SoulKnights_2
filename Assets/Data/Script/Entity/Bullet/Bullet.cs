@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
-public class Bullet : Entity, IMovement, IDamageSender, IDespawnByDistance, IMoveForward,
-    IDespawnByCollide
+public class Bullet : Entity, IMovement, IDamageSender, IDespawnByDistance, 
+    IMoveForward, IChargeMoveSpeed, IChargeScale, IDespawnByCollide
 {
     //==========================================Variable==========================================
     [Header("=====Bullet=====")]
@@ -12,11 +12,13 @@ public class Bullet : Entity, IMovement, IDamageSender, IDespawnByDistance, IMov
     [SerializeField] protected InterfaceReference<IBullet> user;
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected CapsuleCollider2D col;
+    [SerializeField] protected bool canMove;
 
     [Header("Component")]
     [SerializeField] protected Movement movement;
     [SerializeField] protected DamageSender damageSender;
     [SerializeField] protected List<Despawner> despawners;
+    [SerializeField] protected List<Chargement> chargements;
 
     public void SetUser(IBullet user)
     {
@@ -60,7 +62,8 @@ public class Bullet : Entity, IMovement, IDamageSender, IDespawnByDistance, IMov
     {
         if (this.movement == component)
         {
-            return this.user.Value.CanMove(this);
+            if (!this.canMove) this.canMove = this.user.Value.CanMove(this);
+            else return this.canMove;
         }
 
         Util.Instance.IComponentErrorLog(transform, component.transform);
@@ -163,5 +166,56 @@ public class Bullet : Entity, IMovement, IDamageSender, IDespawnByDistance, IMov
 
         Util.Instance.IComponentErrorLog(transform, component.transform);
         return null;
+    }
+
+    //========================================IChargement=========================================
+    bool IChargement.CanStart(Chargement component)
+    {
+        foreach (Chargement chargement in this.chargements)
+        {
+            if (component != chargement) continue;
+            return this.user.Value.CanStartCharge(this);
+        }
+
+        Util.Instance.IComponentErrorLog(transform, component.transform);
+        return false;
+    }
+
+    bool IChargement.CanFinishSkill(Chargement component)
+    {
+        foreach (Chargement chargement in this.chargements)
+        {
+            if (component != chargement) continue;
+            return this.user.Value.CanFinishCharge(this);
+        }
+
+        Util.Instance.IComponentErrorLog(transform, component.transform);
+        return false;
+    }
+
+    //======================================IChargeMoveSpeed======================================
+    void IChargeMoveSpeed.SetMoveSpeed(ChargeMoveSpeed component, float value)
+    {
+        foreach (ChargeMoveSpeed chargement in this.chargements)
+        {
+            if (component != chargement) continue;
+            this.movement.MoveSpeed = value;
+        }
+
+        Util.Instance.IComponentErrorLog(transform, component.transform);
+        return;
+    }
+
+    //========================================IChargeScale========================================
+    void IChargeScale.MulChargeScale(ChargeScale component, float value)
+    {
+        foreach (ChargeScale chargement in this.chargements)
+        {
+            if (component != chargement) continue;
+            transform.localScale *= value;
+        }
+
+        Util.Instance.IComponentErrorLog(transform, component.transform);
+        return;
     }
 }

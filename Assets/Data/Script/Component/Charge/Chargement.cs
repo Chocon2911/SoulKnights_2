@@ -6,13 +6,13 @@ public class Chargement : HuyMonoBehaviour
 {
     //==========================================Variable==========================================
     [Header("Charge")]
-    [SerializeField] private InterfaceReference<IChargement> user1;
+    [SerializeField] private InterfaceReference<IChargement> user;
     [SerializeField] protected List<Cooldown> chargeCDs;
     [SerializeField] protected int chargeState;
     [SerializeField] protected bool isCharging;
 
     //==========================================Get Set===========================================
-    public IChargement User1 { get => user1.Value; set => user1.Value = value; }
+    public IChargement User { get => user.Value; set => user.Value = value; }
     public List<Cooldown> ChargeCDs { get => chargeCDs; set => chargeCDs = value; }
     public int ChargeState { get => chargeState; set => chargeState = value; }
     public bool IsCharging { get => isCharging; set => isCharging = value; }
@@ -26,7 +26,7 @@ public class Chargement : HuyMonoBehaviour
     //============================================Use=============================================
     protected virtual void StartingCharge()
     {
-        if (!this.user1.Value.CanStart(this)) return;
+        if (!this.user.Value.CanStart(this)) return;
         this.StartCharge();
     }
 
@@ -50,7 +50,7 @@ public class Chargement : HuyMonoBehaviour
     //===========================================Finish===========================================
     protected virtual void FinishingSkill()
     {
-        if (!this.user1.Value.CanFinishSkill(this)) return;
+        if (!this.user.Value.CanFinishSkill(this)) return;
         this.FinishSkill();
     }
 
