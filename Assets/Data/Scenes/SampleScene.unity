@@ -2233,6 +2233,7 @@ MonoBehaviour:
     isReady: 0
   chargeState: 0
   isCharging: 0
+  isFinish: 0
   user1:
     underlyingValue: {fileID: 724498887}
   scaleMul:
@@ -3432,10 +3433,11 @@ MonoBehaviour:
     isReady: 0
   chargeState: 0
   isCharging: 0
+  isFinish: 0
   user1:
     underlyingValue: {fileID: 8769407314605724822}
   scaleMul:
-  - 0.1
+  - 0.05
 --- !u!4 &1739330295267724538
 Transform:
   m_ObjectHideFlags: 0
@@ -5112,10 +5114,11 @@ MonoBehaviour:
     isReady: 0
   chargeState: 1
   isCharging: 0
+  isFinish: 0
   user1:
     underlyingValue: {fileID: 3942748917476336483}
   scaleMul:
-  - 0.1
+  - 0.5
 --- !u!4 &6280009704151251727
 Transform:
   m_ObjectHideFlags: 0
