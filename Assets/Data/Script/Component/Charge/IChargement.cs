@@ -5,5 +5,5 @@ using UnityEngine;
 public interface IChargement
 {
     bool CanStart(Chargement component);
-    bool CanFinishSkill(Chargement component);
+    bool CanFinishCharge(Chargement component);
 }

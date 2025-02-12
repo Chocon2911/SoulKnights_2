@@ -13,6 +13,12 @@ public class ChargeScale : Chargement
     public IChargeScale User1 { get => user1.Value; set => user1.Value = value; }
     public List<float> ScaleMul { get => scaleMul; set => scaleMul = value; }
 
+    //===========================================Unity============================================
+    protected virtual void OnDisable()
+    {
+        this.user1.Value.ResetToDefaultScale(this);
+    }
+
     //==========================================Override==========================================
     protected override void Charge()
     {

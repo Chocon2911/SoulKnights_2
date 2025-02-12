@@ -25,6 +25,11 @@ public class Bullet : Entity, IMovement, IDamageSender, IDespawnByDistance,
         this.user.Value = user;
     }
 
+    public void SetCanMove(bool canMove)
+    {
+        this.canMove = canMove;
+    }
+
     //===========================================Unity============================================
     public override void LoadComponents()
     {
@@ -40,10 +45,14 @@ public class Bullet : Entity, IMovement, IDamageSender, IDespawnByDistance,
         this.damageSender.User = this;
         this.LoadComponent(ref this.despawners, transform.Find("Despawn"), "LoadDespawners()");
         foreach (Despawner despawner in this.despawners) despawner.User = this;
+        this.LoadComponent(ref this.chargements, transform.Find("Charge"), "LoadChargements()");
+        foreach (Chargement chargement in this.chargements) chargement.User = this;
 
+        // ===Movement===
         // MoveForward
         if (this.movement is MoveForward moveForward) moveForward.User1 = this;
 
+        // ===Despawner===
         // DespawnByDistance
         foreach (Despawner despawner in this.despawners)
         {
@@ -55,7 +64,42 @@ public class Bullet : Entity, IMovement, IDamageSender, IDespawnByDistance,
         {
             if (despawner is DespawnByCollide despawnByCollide) despawnByCollide.User1 = this;
         }
+
+        // ===Chargement===
+        // ChargeMoveSpeed
+        foreach (Chargement charge in this.chargements)
+        {
+            if (charge is ChargeMoveSpeed chargeMoveSpeed) chargeMoveSpeed.User1 = this;
+        }
+
+        // ChargeScale
+        foreach (Chargement charge in this.chargements)
+        {
+            if (charge is ChargeScale chargeScale) chargeScale.User1 = this;
+        }
     }
+
+    protected virtual void FixedUpdate()
+    {
+        this.BeforeMove();
+    }
+
+    protected virtual void OnDisable()
+    {
+        this.canMove = false;
+        this.col.enabled = false;
+    }
+
+    //===========================================Method===========================================
+    protected virtual void BeforeMove()
+    {
+        if (!this.canMove) this.col.enabled = false;
+        else this.col.enabled = true;
+    }
+
+    //============================================================================================
+    //=========================================Interface==========================================
+    //============================================================================================
 
     //=========================================IMovement==========================================
     bool IMovement.CanMove(Movement component)
@@ -63,7 +107,7 @@ public class Bullet : Entity, IMovement, IDamageSender, IDespawnByDistance,
         if (this.movement == component)
         {
             if (!this.canMove) this.canMove = this.user.Value.CanMove(this);
-            else return this.canMove;
+            return this.canMove;
         }
 
         Util.Instance.IComponentErrorLog(transform, component.transform);
@@ -99,6 +143,7 @@ public class Bullet : Entity, IMovement, IDamageSender, IDespawnByDistance,
         foreach (Despawner despawner in this.despawners)
         {
             if (despawner != component) continue;
+            if (!this.canMove) return false;
             return true;
         }
 
@@ -173,7 +218,6 @@ public class Bullet : Entity, IMovement, IDamageSender, IDespawnByDistance,
     {
         foreach (Chargement chargement in this.chargements)
         {
-            if (component != chargement) continue;
             return this.user.Value.CanStartCharge(this);
         }
 
@@ -181,11 +225,10 @@ public class Bullet : Entity, IMovement, IDamageSender, IDespawnByDistance,
         return false;
     }
 
-    bool IChargement.CanFinishSkill(Chargement component)
+    bool IChargement.CanFinishCharge(Chargement component)
     {
         foreach (Chargement chargement in this.chargements)
         {
-            if (component != chargement) continue;
             return this.user.Value.CanFinishCharge(this);
         }
 
@@ -196,10 +239,14 @@ public class Bullet : Entity, IMovement, IDamageSender, IDespawnByDistance,
     //======================================IChargeMoveSpeed======================================
     void IChargeMoveSpeed.SetMoveSpeed(ChargeMoveSpeed component, float value)
     {
-        foreach (ChargeMoveSpeed chargement in this.chargements)
+        foreach (Chargement chargement in this.chargements)
         {
-            if (component != chargement) continue;
-            this.movement.MoveSpeed = value;
+            if (chargement is ChargeMoveSpeed chargeMoveSpeed)
+            {
+                if (chargeMoveSpeed != component) continue;
+                this.movement.MoveSpeed = value;
+                return;
+            }
         }
 
         Util.Instance.IComponentErrorLog(transform, component.transform);
@@ -207,12 +254,32 @@ public class Bullet : Entity, IMovement, IDamageSender, IDespawnByDistance,
     }
 
     //========================================IChargeScale========================================
+    void IChargeScale.ResetToDefaultScale(ChargeScale component)
+    {
+        foreach (Chargement chargement in this.chargements)
+        {
+            if (chargement is ChargeScale chargeScale)
+            {
+                if (chargeScale != component) continue;
+                transform.localScale = Vector3.one;
+                return;
+            }
+        }
+
+        Util.Instance.IComponentErrorLog(transform, component.transform);
+        return;
+    }
+    
     void IChargeScale.MulChargeScale(ChargeScale component, float value)
     {
-        foreach (ChargeScale chargement in this.chargements)
+        foreach (Chargement chargement in this.chargements)
         {
-            if (component != chargement) continue;
-            transform.localScale *= value;
+            if (chargement is ChargeScale chargeScale)
+            {
+                if (chargeScale != component) continue;
+                transform.localScale += transform.localScale * value;
+                return;
+            }
         }
 
         Util.Instance.IComponentErrorLog(transform, component.transform);

@@ -30,7 +30,7 @@ public class HuyMonoBehaviour : MonoBehaviour
 
     protected virtual void LoadComponent<T>(ref List<T> components, Transform obj, string message)
     {
-        if (components.Count > 0) components.Clear();
+        components.Clear();
         foreach (Transform child in obj) components.Add(child.GetComponent<T>());
         Debug.LogWarning(transform.name + ": " + message, transform.gameObject);
     }

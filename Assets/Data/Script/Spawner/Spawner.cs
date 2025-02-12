@@ -6,7 +6,6 @@ using UnityEngine;
 public abstract class Spawner : HuyMonoBehaviour
 {
     [Header("Spawner")]
-    [Header("Other")]
     [SerializeField] protected Transform prefabObj;
     public Transform PrefabObj => prefabObj;
 
@@ -46,8 +45,7 @@ public abstract class Spawner : HuyMonoBehaviour
 
     protected virtual void LoadPrefabs()
     {
-        if (this.prefabs == null) this.prefabs = new List<Transform>();
-        if (this.prefabs.Count > 0) return;
+        this.prefabs = new List<Transform>();
         this.LoadPrefabObj();
 
         foreach (Transform obj in this.prefabObj) this.prefabs.Add(obj);
@@ -56,8 +54,7 @@ public abstract class Spawner : HuyMonoBehaviour
 
     protected virtual void LoadHolders()
     {
-        if (this.holders == null) this.holders = new List<Transform>();
-        if (this.holders.Count > 0) return;
+        this.holders = new List<Transform>();
         this.LoadHolderObj();
 
         foreach (Transform obj in this.holderObj) this.holders.Add(obj);

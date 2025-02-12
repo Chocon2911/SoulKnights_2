@@ -10,6 +10,7 @@ public class Chargement : HuyMonoBehaviour
     [SerializeField] protected List<Cooldown> chargeCDs;
     [SerializeField] protected int chargeState;
     [SerializeField] protected bool isCharging;
+    [SerializeField] protected bool isFinish;
 
     //==========================================Get Set===========================================
     public IChargement User { get => user.Value; set => user.Value = value; }
@@ -20,12 +21,21 @@ public class Chargement : HuyMonoBehaviour
     //===========================================Unity============================================
     protected virtual void FixedUpdate()
     {
+        this.Charging();
         this.CheckingState();
+        this.FinishingSkill();
+        this.StartingCharge();
+    }
+
+    protected virtual void OnEnable()
+    {
+        this.isFinish = false;
     }
 
     //============================================Use=============================================
     protected virtual void StartingCharge()
     {
+        if (this.isFinish) return;
         if (!this.user.Value.CanStart(this)) return;
         this.StartCharge();
     }
@@ -38,6 +48,8 @@ public class Chargement : HuyMonoBehaviour
     //===========================================Charge===========================================
     protected virtual void Charging()
     {
+        if (this.isFinish) return;
+        if (this.chargeCDs[this.chargeState - 1].IsReady) return;
         if (!this.isCharging) return;
         this.Charge();
     }
@@ -50,19 +62,23 @@ public class Chargement : HuyMonoBehaviour
     //===========================================Finish===========================================
     protected virtual void FinishingSkill()
     {
-        if (!this.user.Value.CanFinishSkill(this)) return;
+        if (this.isFinish) return;
+        if (!this.user.Value.CanFinishCharge(this)) return;
         this.FinishSkill();
     }
 
     protected virtual void FinishSkill()
     {
         foreach (Cooldown cd in this.chargeCDs) cd.ResetStatus();
-        this.chargeState = 0;
+        this.chargeState = 1;
+        this.isCharging = false;
+        this.isFinish = true;
     }
 
     //===========================================State============================================
     protected virtual void CheckingState()
     {
+        if (this.chargeState >= this.chargeCDs.Count) return;
         if (!this.chargeCDs[this.chargeState - 1].IsReady) return;
         this.IncreaseState();
     }

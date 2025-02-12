@@ -148,7 +148,7 @@ MonoBehaviour:
   moveDir: {x: 0, y: 0}
   isMove: 0
   user1:
-    underlyingValue: {fileID: 0}
+    underlyingValue: {fileID: 4595823739187584803}
 --- !u!1 &4741949536891823610
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,7 +406,9 @@ MonoBehaviour:
     underlyingValue: {fileID: 0}
   rb: {fileID: 9045785404979785948}
   col: {fileID: 1773888913678841806}
+  canMove: 0
   movement: {fileID: 7705802469858389788}
   damageSender: {fileID: 8025491311532329977}
   despawners:
   - {fileID: 3297157400322348022}
+  chargements: []

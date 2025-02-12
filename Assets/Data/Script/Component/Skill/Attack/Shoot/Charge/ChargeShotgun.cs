@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShotgunSkill : ShootSkill
+public class ChargeShotgun : ChargeShot
 {
     //==========================================Variable==========================================
     [Header("Shotgun")]
     [SerializeField] private int bulletCount;
     [SerializeField] private float spreadAngle;
-    [SerializeField] private List<Transform> newBullets;
+    [SerializeField] protected List<Bullet> newBullets;
 
     //==========================================Override==========================================
     protected override void UseSkill()
@@ -16,6 +16,7 @@ public class ShotgunSkill : ShootSkill
         Transform bulletObj = this.bullet.transform;
         Vector2 spawnPos = this.firePoint.position;
         float lowestBulletAngle = this.firePoint.eulerAngles.z - this.spreadAngle / 2;
+        List<Transform> newBullets = new List<Transform>();
 
         for (int i = 0; i < this.bulletCount; i++)
         {
@@ -29,43 +30,36 @@ public class ShotgunSkill : ShootSkill
                 return;
             }
 
-            this.newBullets.Add(newBullet);
+            newBullets.Add(newBullet);
         }
 
-        foreach (Transform newBullet in this.newBullets)
+        foreach (Transform newBullet in newBullets)
         {
             Bullet bullet = newBullet.GetComponent<Bullet>();
             bullet.SetUser(this);
+            this.newBullets.Add(bullet);
             newBullet.gameObject.SetActive(true);
         }
+
         base.UseSkill();
-
-        if (this.shootMode == ShootMode.CHARGE) return;
-        this.isFinish = true;
     }
-
+    
     protected override void OnCharge()
     {
-        Vector2 newPos = this.firePoint.position;
+        Vector2 spawnPos = this.firePoint.position;
         float lowestBulletAngle = this.firePoint.eulerAngles.z - this.spreadAngle / 2;
 
         for (int i = 0; i < this.bulletCount; i++)
         {
             float angle = lowestBulletAngle + i * this.spreadAngle / (this.bulletCount - 1);
             Quaternion newRot = Quaternion.Euler(0, 0, angle);
-            this.newBullets[i].SetPositionAndRotation(newPos, newRot);
+            this.newBullets[i].transform.SetPositionAndRotation(spawnPos, newRot);
         }
     }
 
-    protected override bool CanMove(Bullet component)
+    protected override void Finish()
     {
-        foreach (Transform newBullet in this.newBullets)
-        {
-            if (newBullet != component.transform) continue;
-            return this.isFinish;
-        }
-
-        Util.Instance.IComponentErrorLog(transform, component.transform);
-        return false;
+        base.Finish();
+        this.newBullets.Clear();
     }
 }

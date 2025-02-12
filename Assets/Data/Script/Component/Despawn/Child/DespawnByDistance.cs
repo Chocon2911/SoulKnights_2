@@ -15,6 +15,12 @@ public class DespawnByDistance : Despawner
     public float CurrDistance { get => currDistance; set => currDistance = value; }
     public float DespawnDistance { get => despawnDistance; set => despawnDistance = value; }
 
+    //===========================================Unity============================================
+    protected virtual void FixedUpdate()
+    {
+        this.Despawn();
+    }
+
     //==========================================Override==========================================
     protected override void Despawn()
     {
