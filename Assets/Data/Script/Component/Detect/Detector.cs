@@ -8,7 +8,7 @@ public abstract class Detector : HuyMonoBehaviour
     [SerializeField] private InterfaceReference<IDetector> user;
     [Header("Detector")]
     [SerializeField] protected Transform target;
-    [SerializeField] protected List<LayerMask> layerMasks;
+    [SerializeField] protected List<string> tags;
 
     //==========================================Get Set===========================================
     public IDetector User { get => user.Value; set => user.Value = value; }

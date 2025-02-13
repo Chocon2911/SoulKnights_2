@@ -11,19 +11,27 @@ public class Chargement : HuyMonoBehaviour
     [SerializeField] protected int chargeState;
     [SerializeField] protected bool isCharging;
     [SerializeField] protected bool isFinish;
+    [SerializeField] protected bool isFullyCharge;
 
     //==========================================Get Set===========================================
-    public IChargement User { get => user.Value; set => user.Value = value; }
-    public List<Cooldown> ChargeCDs { get => chargeCDs; set => chargeCDs = value; }
-    public int ChargeState { get => chargeState; set => chargeState = value; }
-    public bool IsCharging { get => isCharging; set => isCharging = value; }
+    public IChargement User { set => user.Value = value; }
+    public List<Cooldown> ChargeCDs { get => chargeCDs; }
+    public int ChargeState { get => chargeState; }
+    public bool IsCharging { get => isCharging; }
+    public bool IsFinish { get => isFinish; }
+    public bool IsFullyCharge { get => isFullyCharge; }
 
     //===========================================Unity============================================
+    protected virtual void Update()
+    {
+        this.IncreasingState();
+        this.FinishingSkill();
+        this.CheckingState();
+    }
+    
     protected virtual void FixedUpdate()
     {
         this.Charging();
-        this.CheckingState();
-        this.FinishingSkill();
         this.StartingCharge();
     }
 
@@ -75,8 +83,8 @@ public class Chargement : HuyMonoBehaviour
         this.isFinish = true;
     }
 
-    //===========================================State============================================
-    protected virtual void CheckingState()
+    //=======================================Increase State=======================================
+    protected virtual void IncreasingState()
     {
         if (this.chargeState >= this.chargeCDs.Count) return;
         if (!this.chargeCDs[this.chargeState - 1].IsReady) return;
@@ -86,5 +94,17 @@ public class Chargement : HuyMonoBehaviour
     protected virtual void IncreaseState()
     {
         this.chargeState++;
+    }
+
+    //========================================Check State=========================================
+    protected virtual void CheckingState()
+    {
+        if (this.chargeState < this.chargeCDs.Count)
+        {
+            this.isFullyCharge = false;
+            return;
+        }
+
+        this.isFullyCharge = true;
     }
 }

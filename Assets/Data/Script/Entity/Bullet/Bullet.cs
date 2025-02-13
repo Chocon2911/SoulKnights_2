@@ -30,6 +30,9 @@ public class Bullet : Entity, IMovement, IDamageSender, IDespawnByDistance,
         this.canMove = canMove;
     }
 
+    //===========================================public===========================================
+    public List<Chargement> Chargements => this.chargements;
+
     //===========================================Unity============================================
     public override void LoadComponents()
     {

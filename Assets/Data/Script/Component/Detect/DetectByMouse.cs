@@ -22,11 +22,12 @@ public class DetectByMouse : Detector
         float distance = Vector2.Distance(mainObjPos, targetPos);
         
         if (distance > this.detectRange) return;
-        foreach (LayerMask mask in this.layerMasks)
-        {
-            Collider2D col = Physics2D.OverlapCircle(targetPos, 0.1f, mask);
+        Collider2D col = Physics2D.OverlapCircle(targetPos, 0.1f);
             
-            if (col == null) continue;
+        if (col == null) return;
+        foreach (string tag in this.tags)
+        {
+            if (!col.gameObject.CompareTag(tag)) continue;
             this.target = col.transform;
             return;
         }

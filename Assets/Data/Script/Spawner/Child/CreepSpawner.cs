@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPCSpawner : Spawner
+public class CreepSpawner : Spawner
 {
     //==========================================Variable==========================================
-    private static NPCSpawner instance;
-    public static NPCSpawner Instance => instance;
+    private static CreepSpawner instance;
+    public static CreepSpawner Instance => instance;
 
     //===========================================Unity============================================
     protected override void Awake()

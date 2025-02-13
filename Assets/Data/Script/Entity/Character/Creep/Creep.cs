@@ -1,0 +1,154 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, IDetectByCollide, 
+    IDamageReceiver
+{
+    //==========================================Variable==========================================
+    [Header("=====Creep=====")]
+    [SerializeField] protected Movement movement;
+    [SerializeField] protected List<Despawner> despawners;
+    [SerializeField] protected Skill skill;
+    [SerializeField] protected Detector detector;
+    [SerializeField] protected DamageReceiver damageRecv;
+
+    //===========================================Unity============================================
+    public override void LoadComponents()
+    {
+        base.LoadComponents();
+        // Component
+        this.LoadComponent(ref this.movement, transform.Find("Move"), "LoadMovement()");
+        this.movement.User = this;
+        this.LoadComponent(ref this.despawners, transform.Find("Despawn"), "LoadDespawners()");
+        foreach (Despawner despawner in this.despawners) despawner.User = this;
+        this.LoadComponent(ref this.skill, transform.Find("Skill"), "LoadSkill()");
+        this.skill.User = this;
+        this.LoadComponent(ref this.detector, transform.Find("Detector"), "LoadDetector()");
+        this.detector.User = this;
+        this.LoadComponent(ref this.damageRecv, transform.Find("DamageRecv"), "LoadDamageRecv()");
+        this.damageRecv.User = this;
+
+        // MoveRandomly
+        if (this.movement is MoveRandomly moveRandomly) moveRandomly.User1 = this;
+
+        // ShootSkill
+        if (this.skill is ShootSkill shootSkill) shootSkill.User1 = this;
+
+        // DespawnByHealth
+        foreach (Despawner despawner in this.despawners)
+        {
+            if (despawner is not DespawnByHealth despawnByHealth) continue; 
+            despawnByHealth.User1 = this;
+        }
+
+        // DetectByCollide
+        if (this.detector is DetectByCollide detectByCollide) detectByCollide.User1 = this;
+    }
+
+
+
+    //============================================================================================
+    //=========================================Interface==========================================
+    //============================================================================================
+
+    //=========================================IMovement==========================================
+    bool IMovement.CanMove(Movement component)
+    {
+        return this.damageRecv.IsDamage == false;
+    }
+
+    Rigidbody2D IMovement.GetRb(Movement component)
+    {
+        return this.rb;
+    }
+
+    //=======================================IMoveRandomly========================================
+    bool IMoveRandomly.CanFinishMove(MoveRandomly component)
+    {
+        return this.damageRecv.IsDamage;
+    }
+
+    //=========================================IDespawner=========================================
+    bool IDespawner.CanDespawn(Despawner component)
+    {
+        return true;
+    }
+
+    Transform IDespawner.GetDespawnObj(Despawner component)
+    {
+        return transform;
+    }
+
+    Spawner IDespawner.GetSpawner(Despawner component)
+    {
+        return CreepSpawner.Instance;
+    }
+
+    //======================================IDespawnByHealth======================================
+    int IDespawnByHealth.GetCurrHealth(DespawnByHealth component)
+    {
+        return this.health;
+    }
+
+    //===========================================ISkill===========================================
+    bool ISkill.CanUseSkill(Skill component)
+    {
+        if (this.detector.Target == null) return false;
+        if (this.health <= 0) return false;
+        return true;
+    }
+
+    bool ISkill.CanRechargeSkill(Skill component)
+    {
+        return true;
+    }
+
+    void ISkill.ConsumePower(Skill component)
+    {
+        this.health -= component.HealthCost;
+    }
+
+    //========================================IShootSkill=========================================
+    int IShootSkill.GetShootState(ShootSkill component)
+    {
+        // Normal Shot
+        if (this.skill is NormalShot normalShot)
+        {
+            if (this.detector.Target != null) return 1;
+            return 0;
+        }
+
+        // Charge Shot
+        if (this.skill is ChargeShot chargeShot)
+        {
+            foreach (Chargement chargement in component.Bullet.Chargements)
+            {
+                if (chargement.IsFullyCharge) continue;
+                return 2;
+            }
+
+            return 0;
+        }
+
+        return 0;
+    }
+
+    //=========================================IDetector==========================================
+    bool IDetector.CanDetect(Detector component)
+    {
+        return true;
+    }
+
+    //======================================IDetectByCollide======================================
+    Transform IDetectByCollide.GetOwner(DetectByCollide component)
+    {
+        return transform;
+    }
+
+    //======================================IDamageReceiver=======================================
+    void IDamageReceiver.ReduceHealth(DamageReceiver component, int damage)
+    {
+        this.health -= damage;
+    }
+}
