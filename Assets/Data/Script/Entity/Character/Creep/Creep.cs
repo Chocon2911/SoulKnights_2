@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, IDetectByCollide, 
-    IDamageReceiver
+    IDamageReceiver, IObjHolder
 {
     //==========================================Variable==========================================
     [Header("=====Creep=====")]
@@ -12,6 +12,7 @@ public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, ID
     [SerializeField] protected Skill skill;
     [SerializeField] protected Detector detector;
     [SerializeField] protected DamageReceiver damageRecv;
+    [SerializeField] protected ObjHolder objHolder;
 
     //===========================================Unity============================================
     public override void LoadComponents()
@@ -28,6 +29,8 @@ public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, ID
         this.detector.User = this;
         this.LoadComponent(ref this.damageRecv, transform.Find("DamageRecv"), "LoadDamageRecv()");
         this.damageRecv.User = this;
+        this.LoadComponent(ref this.objHolder, transform.Find("Hold"), "LoadObjHolder()");
+        this.objHolder.User = this;
 
         // MoveRandomly
         if (this.movement is MoveRandomly moveRandomly) moveRandomly.User1 = this;
@@ -43,7 +46,7 @@ public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, ID
         }
 
         // DetectByCollide
-        if (this.detector is DetectByCollide detectByCollide) detectByCollide.User1 = this;
+        if (this.detector is DetectByOnStay detectByCollide) detectByCollide.User1 = this;
     }
 
 
@@ -141,7 +144,7 @@ public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, ID
     }
 
     //======================================IDetectByCollide======================================
-    Transform IDetectByCollide.GetOwner(DetectByCollide component)
+    Transform IDetectByCollide.GetOwner(DetectByOnStay component)
     {
         return transform;
     }
@@ -150,5 +153,28 @@ public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, ID
     void IDamageReceiver.ReduceHealth(DamageReceiver component, int damage)
     {
         this.health -= damage;
+    }
+
+    //=========================================IObjHolder=========================================
+    bool IObjHolder.CanHold(ObjHolder component)
+    {
+        return true;
+    }
+
+    Vector2 IObjHolder.GetMainObjPos(ObjHolder component)
+    {
+        return transform.position;
+    }
+
+    Vector2 IObjHolder.GetTargetPos(ObjHolder component)
+    {
+        if (this.detector.Target == null) return Vector2.zero;
+        return this.detector.Target.transform.position;
+    }
+
+    Transform IObjHolder.GetHoldObj(ObjHolder component)
+    {
+        if (this.skill is not ShootSkill shootSkill) return null;
+        return shootSkill.FirePoint;
     }
 }

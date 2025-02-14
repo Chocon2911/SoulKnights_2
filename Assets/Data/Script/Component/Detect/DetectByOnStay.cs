@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(CircleCollider2D))]
-public class DetectByCollide : Detector
+public class DetectByOnStay : Detector
 {
     //==========================================Variable==========================================
     [Header("By Collide")]

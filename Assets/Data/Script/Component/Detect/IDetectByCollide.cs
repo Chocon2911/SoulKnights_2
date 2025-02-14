@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IDetectByCollide : IDetector
 {
-    Transform GetOwner(DetectByCollide component);
+    Transform GetOwner(DetectByOnStay component);
 }

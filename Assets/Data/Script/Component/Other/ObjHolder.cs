@@ -27,34 +27,17 @@ public class ObjHolder : HuyMonoBehaviour
         this.Hold();
     }
 
-    protected virtual void Hold()
+   protected virtual void Hold()
     {
         Vector2 mainObjPos = this.user.Value.GetMainObjPos(this);
         Vector2 targetPos = this.user.Value.GetTargetPos(this);
-        Transform modelObj = this.user.Value.GetModelObj(this);
         Transform holdObj = this.user.Value.GetHoldObj(this);
 
-        // Hold Obj
         float angle = -Vector2.SignedAngle(targetPos - mainObjPos, Vector2.right);
         Vector2 pos = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad))
             * this.holdRange;
 
         holdObj.position = pos + mainObjPos; // Pos
         holdObj.rotation = Quaternion.Euler(0, 0, angle); // Rot
-
-        // Turn Left and Right
-        float imageXAngle = modelObj.localEulerAngles.x;
-        float imageYAngle = modelObj.localEulerAngles.y;
-        float imageZAngle = modelObj.localEulerAngles.z;
-
-        if (Mathf.Cos(angle * Mathf.Deg2Rad) > 0 && imageXAngle > 0) // Turn Right
-        {
-            modelObj.localRotation = Quaternion.Euler(imageXAngle + 180, imageYAngle, imageZAngle);
-        }
-
-        else if (Mathf.Cos(angle * Mathf.Deg2Rad) <= 0 && imageXAngle <= 0) // Turn Left
-        {
-            modelObj.localRotation = Quaternion.Euler(imageXAngle - 180, imageYAngle, imageZAngle);
-        }
     }
 }

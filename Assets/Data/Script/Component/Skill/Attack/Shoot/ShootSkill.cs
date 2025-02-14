@@ -12,6 +12,7 @@ public abstract class ShootSkill : Skill, IBullet
 
     //==========================================Get Set===========================================
     public IShootSkill User1 { set => user1.Value = value; }
+    public Transform FirePoint { get => this.firePoint; }
     public Bullet Bullet { get => this.bullet; }
 
     //===========================================Unity============================================

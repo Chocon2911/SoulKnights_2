@@ -19,5 +19,4 @@ public class DamageSender : HuyMonoBehaviour
         receiver.Receive(this);
         this.user.Value.OnSending(this);
     }
-
 }

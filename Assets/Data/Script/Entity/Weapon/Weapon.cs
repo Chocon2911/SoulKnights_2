@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapon : Entity, ISkill, IObjHolder, IShootSkill
+public class Weapon : Entity, ISkill, IObjHolder, IObjTurning, IShootSkill
 {
     //==========================================Variable==========================================
     [Header("=====Weapon=====")]
     [SerializeField] private InterfaceReference<IWeapon> user;
     [SerializeField] protected ObjHolder objHolder;
+    [SerializeField] protected ObjTurning objTurning;
     [SerializeField] protected Skill skill;
 
     //==========================================Get Set===========================================
@@ -21,6 +22,8 @@ public class Weapon : Entity, ISkill, IObjHolder, IShootSkill
         base.LoadComponents();
         this.LoadComponent(ref this.objHolder, transform.Find("Hold"), "LoadObjHolder()");
         this.objHolder.User = this;
+        this.LoadComponent(ref this.objTurning, transform.Find("Turn"), "LoadObjTurning()");
+        this.objTurning.User = this;
         this.LoadComponent(ref this.skill, transform.Find("Skill"), "LoadSkill()");
         this.skill.User = this;
 
@@ -84,17 +87,6 @@ public class Weapon : Entity, ISkill, IObjHolder, IShootSkill
         return false;
     }
 
-    Transform IObjHolder.GetModelObj(ObjHolder component)
-    {
-        if (this.objHolder == component)
-        {
-            return this.model.transform;
-        }
-
-        Util.Instance.IComponentErrorLog(transform, component.transform);
-        return null;
-    }
-
     Vector2 IObjHolder.GetMainObjPos(ObjHolder component)
     {
         if (this.objHolder == component)
@@ -126,6 +118,22 @@ public class Weapon : Entity, ISkill, IObjHolder, IShootSkill
 
         Util.Instance.IComponentErrorLog(transform, component.transform);
         return null;
+    }
+
+    //========================================IObjTurning=========================================
+    Transform IObjTurning.GetMainObj(ObjTurning component)
+    {
+        return transform;
+    }
+
+    Transform IObjTurning.GetTurnObj(ObjTurning component)
+    {
+        return this.model.transform;
+    }
+
+    bool IObjTurning.CanTurn(ObjTurning component)
+    {
+        return true;
     }
 
     //========================================IShootSkill=========================================
