@@ -46,7 +46,7 @@ public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, ID
         }
 
         // DetectByCollide
-        if (this.detector is DetectByOnStay detectByCollide) detectByCollide.User1 = this;
+        if (this.detector is DetectByCollide detectByCollide) detectByCollide.User1 = this;
     }
 
 
@@ -144,7 +144,7 @@ public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, ID
     }
 
     //======================================IDetectByCollide======================================
-    Transform IDetectByCollide.GetOwner(DetectByOnStay component)
+    Transform IDetectByCollide.GetOwner(DetectByCollide component)
     {
         return transform;
     }

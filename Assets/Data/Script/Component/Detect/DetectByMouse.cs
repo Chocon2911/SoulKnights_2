@@ -8,13 +8,33 @@ public class DetectByMouse : Detector
     [Header("By Mouse")]
     [SerializeField] private InterfaceReference<IDetectByMouse> user1;
     [SerializeField] protected float detectRange;
+    [SerializeField] protected Transform target;
 
     //==========================================Get Set===========================================
     public IDetectByMouse User1 { get => user1.Value; set => user1.Value = value; }
     public float DetectRange { get => detectRange; set => detectRange = value; }
+    public override Transform Target => this.target;
+
+    //===========================================Unity============================================
+    protected virtual void Update()
+    {
+        this.Detecting();
+    }
+
+    //==========================================Override==========================================
+    public override void ResetTarget()
+    {
+        this.target = null;
+    }
 
     //===========================================Method===========================================
-    protected override void Detect()
+    protected virtual void Detecting()
+    {
+        if (!this.user1.Value.CanDetect(this)) return;
+        this.Detect();
+    }
+    
+    protected virtual void Detect()
     {
         IDetectByMouse tempUser = this.user1.Value;
         Vector2 mainObjPos = tempUser.GetMainObj(this).position;
