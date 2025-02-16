@@ -2,7 +2,7 @@
 using UnityEngine;
 
 
-public interface IDetectOnStay : IDetector
+public interface IDetectOnStay : IDetectByCollide
 {
     bool CanRecharge(DetectOnStay component);
 }

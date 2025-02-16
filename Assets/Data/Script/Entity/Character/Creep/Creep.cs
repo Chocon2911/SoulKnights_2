@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, IDetectByCollide, 
+public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, IDetectOnStay, 
     IDamageReceiver, IObjHolder
 {
     //==========================================Variable==========================================
@@ -47,12 +47,15 @@ public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, ID
 
         // DetectByCollide
         if (this.detector is DetectByCollide detectByCollide) detectByCollide.User1 = this;
+
+        // DetectOnStay
+        if (this.detector is DetectOnStay detectOnStay) detectOnStay.User2 = this;
     }
 
 
 
     //============================================================================================
-    //=========================================Interface==========================================
+    //==========================================Movement==========================================
     //============================================================================================
 
     //=========================================IMovement==========================================
@@ -71,6 +74,12 @@ public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, ID
     {
         return this.damageRecv.IsDamage;
     }
+
+
+
+    //============================================================================================
+    //=========================================Despawners=========================================
+    //============================================================================================
 
     //=========================================IDespawner=========================================
     bool IDespawner.CanDespawn(Despawner component)
@@ -93,6 +102,12 @@ public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, ID
     {
         return this.health;
     }
+
+
+
+    //============================================================================================
+    //===========================================Skill============================================
+    //============================================================================================
 
     //===========================================ISkill===========================================
     bool ISkill.CanUseSkill(Skill component)
@@ -137,6 +152,12 @@ public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, ID
         return 0;
     }
 
+
+
+    //============================================================================================
+    //==========================================Detector==========================================
+    //============================================================================================
+
     //=========================================IDetector==========================================
     bool IDetector.CanDetect(Detector component)
     {
@@ -149,11 +170,29 @@ public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, ID
         return transform;
     }
 
+    //=======================================IDetectOnStay========================================
+    bool IDetectOnStay.CanRecharge(DetectOnStay component)
+    {
+        return true;
+    }
+
+
+
+    //============================================================================================
+    //=======================================DamageReceiver=======================================
+    //============================================================================================
+
     //======================================IDamageReceiver=======================================
     void IDamageReceiver.ReduceHealth(DamageReceiver component, int damage)
     {
         this.health -= damage;
     }
+
+
+
+    //============================================================================================
+    //=========================================ObjHolder==========================================
+    //============================================================================================
 
     //=========================================IObjHolder=========================================
     bool IObjHolder.CanHold(ObjHolder component)

@@ -12,12 +12,17 @@ public class DetectOnStay : DetectByCollide
     [SerializeField] protected Cooldown detectCD;
 
     //==========================================Get Set===========================================
-    public IDetectOnStay User2 => this.user2.Value;
+    public IDetectOnStay User2 { set => user2.Value = value; }
 
     //===========================================Unity============================================
     protected virtual void OnTriggerStay2D(Collider2D collision)
     {
         this.Detecting(collision);
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        this.Recharging();
     }
 
     protected virtual void LateUpdate()
