@@ -318,6 +318,7 @@ Transform:
   - {fileID: 1184567985}
   - {fileID: 1803571294}
   - {fileID: 318910716}
+  - {fileID: 156603712}
   m_Father: {fileID: 2125416875}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &79914715
@@ -396,7 +397,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 
   model: {fileID: 1851992395}
-  animator: {fileID: 0}
+  animator: {fileID: 1851992396}
   rb: {fileID: 79914715}
   bodyCol: {fileID: 79914717}
   maxHealth: 10
@@ -405,12 +406,60 @@ MonoBehaviour:
   mana: 10
   maxAmor: 10
   amor: 10
+  state: 0
   movement: {fileID: 284166814}
   dash: {fileID: 2268509}
   regenAmor: {fileID: 1778716326}
   inventory: {fileID: 1184567984}
   pickUpItem: {fileID: 1803571295}
   characterSkill: {fileID: 318910717}
+  lookByMoveDir: {fileID: 156603713}
+--- !u!1 &156603711
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 156603712}
+  - component: {fileID: 156603713}
+  m_Layer: 0
+  m_Name: Look
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &156603712
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156603711}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 79914714}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &156603713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156603711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e032d3fdeeb299d438cdea7c5a1ee885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  user:
+    underlyingValue: {fileID: 79914718}
 --- !u!1 &228029229
 GameObject:
   m_ObjectHideFlags: 0
@@ -1312,6 +1361,7 @@ MonoBehaviour:
   despawners:
   - {fileID: 426980039}
   chargements: []
+  moveDetector: {fileID: 0}
 --- !u!70 &603971443
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1637,6 +1687,7 @@ MonoBehaviour:
   despawners:
   - {fileID: 1318611882}
   chargements: []
+  moveDetector: {fileID: 0}
 --- !u!70 &759144396
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -3366,6 +3417,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1851992394}
   - component: {fileID: 1851992395}
+  - component: {fileID: 1851992396}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -3382,8 +3434,8 @@ Transform:
   m_GameObject: {fileID: 1851992393}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.12, y: -0.12, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 79914714}
@@ -3429,7 +3481,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
+  m_Sprite: {fileID: -1856917325, guid: 4d07c8275ac55f14c9f497115eb80ca1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -3440,6 +3492,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &1851992396
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851992393}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8ae3411a0b0656f4688f80acc668bbe4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1914591310
 GameObject:
   m_ObjectHideFlags: 0
@@ -3486,6 +3559,7 @@ MonoBehaviour:
   - {fileID: 246505119}
   chargements:
   - {fileID: 873424217}
+  moveDetector: {fileID: 0}
 --- !u!4 &1914591312
 Transform:
   m_ObjectHideFlags: 0
@@ -5611,6 +5685,7 @@ MonoBehaviour:
   - {fileID: 415570428899521650}
   chargements:
   - {fileID: 6275050264733714969}
+  moveDetector: {fileID: 0}
 --- !u!1 &4041885243243628554
 GameObject:
   m_ObjectHideFlags: 0
@@ -5826,6 +5901,7 @@ MonoBehaviour:
   despawners:
   - {fileID: 3297157401081252033}
   chargements: []
+  moveDetector: {fileID: 0}
 --- !u!114 &4662418853747849565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7033,6 +7109,7 @@ MonoBehaviour:
   despawners:
   - {fileID: 8912249808544492934}
   chargements: []
+  moveDetector: {fileID: 0}
 --- !u!212 &7625990465886637978
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -7236,6 +7313,7 @@ MonoBehaviour:
   despawners:
   - {fileID: 9022756226936541542}
   chargements: []
+  moveDetector: {fileID: 0}
 --- !u!212 &8020096112886625146
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -7383,6 +7461,7 @@ MonoBehaviour:
   - {fileID: 5386343808181240711}
   chargements:
   - {fileID: 1734220956938698220}
+  moveDetector: {fileID: 0}
 --- !u!4 &8896242102658791559
 Transform:
   m_ObjectHideFlags: 0

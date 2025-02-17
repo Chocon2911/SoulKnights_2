@@ -3,8 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 
-public class Player : Character, IMovement, IRegen, IDashSkill, IInventory, IPickUpItem, IDualWieldSkill
+public class Player : Character, IMovement, IRegen, IDashSkill, IInventory, IPickUpItem, 
+    IDualWieldSkill, ILookByDir
 {
+    protected enum State
+    {
+        IDLE = 0,
+        MOVE = 1,
+    }
+
     //==========================================Variable==========================================
     [Header("=====Player=====")]
     [Header("Stat")]
@@ -12,6 +19,7 @@ public class Player : Character, IMovement, IRegen, IDashSkill, IInventory, IPic
     [SerializeField] protected int mana;
     [SerializeField] protected int maxAmor;
     [SerializeField] protected int amor;
+    [SerializeField] protected State state;
 
     [Header("Component")]
     [SerializeField] protected Movement movement;
@@ -20,6 +28,7 @@ public class Player : Character, IMovement, IRegen, IDashSkill, IInventory, IPic
     [SerializeField] protected Inventory inventory;
     [SerializeField] protected PickUpItem pickUpItem;
     [SerializeField] protected Skill characterSkill;
+    [SerializeField] protected LookByDir lookByMoveDir;
 
 
 
@@ -40,12 +49,33 @@ public class Player : Character, IMovement, IRegen, IDashSkill, IInventory, IPic
         this.pickUpItem.User = this;
         this.LoadComponent(ref this.characterSkill, transform.Find("CharacterSkill"), "LoadCharacterSkill()");
         this.characterSkill.User = this;
+        this.LoadComponent(ref this.lookByMoveDir, transform.Find("Look"), "LoadLook()");
+        this.lookByMoveDir.User = this;
 
         // DualWieldSkill
         if (this.characterSkill is DualWieldSkill dualWieldSkill)
         {
             dualWieldSkill.User1 = this;
         }
+    }
+
+    protected virtual void Update()
+    {
+        this.StateHandler();
+        this.AnimationHandler();
+    }
+
+
+    //=========================================Animation==========================================
+    protected virtual void StateHandler()
+    {
+        if (this.movement.IsMove) this.state = State.MOVE;
+        else this.state = State.IDLE;
+    }
+
+    protected virtual void AnimationHandler()
+    {
+        this.animator.SetInteger("State", (int)this.state);
     }
 
 
@@ -358,5 +388,21 @@ public class Player : Character, IMovement, IRegen, IDashSkill, IInventory, IPic
 
         Util.Instance.IComponentErrorLog(transform, component.transform);
         return;
+    }
+
+    //=========================================ILookByDir=========================================
+    bool ILookByDir.CanLook(LookByDir component)
+    {
+        return true;
+    }
+
+    Transform ILookByDir.GetMainObj(LookByDir component)
+    {
+        return this.model.transform;
+    }
+
+    float ILookByDir.GetXDir(LookByDir component)
+    {
+        return InputManager.Instance.MoveDir.x;
     }
 }

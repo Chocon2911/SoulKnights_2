@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IDetector
+public class ChaseTargetByDetector : MoveForward
 {
-    bool CanDetect(Detector component);
+    
 }

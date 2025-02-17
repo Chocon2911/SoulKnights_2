@@ -2,23 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public interface IBullet
+{
+    Transform GetShooter(Bullet component);
+    bool CanMove(Bullet component);
+
+    // Charge
+    bool CanStartCharge(Bullet component);
+    bool CanFinishCharge(Bullet component);
+}
+
 [RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
-public class Bullet : Entity, IMovement, IDamageSender, IDespawnByDistance, 
-    IMoveForward, IChargeMoveSpeed, IChargeScale, IDespawnByCollide
+public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, IChargeMoveSpeed, 
+    IChargeScale, IDespawnByCollide
 {
     //==========================================Variable==========================================
     [Header("=====Bullet=====")]
     [Header("Stat")]
     [SerializeField] protected InterfaceReference<IBullet> user;
-    [SerializeField] protected Rigidbody2D rb;
-    [SerializeField] protected CapsuleCollider2D col;
     [SerializeField] protected bool canMove;
 
     [Header("Component")]
+    [SerializeField] protected Rigidbody2D rb;
+    [SerializeField] protected CapsuleCollider2D col;
     [SerializeField] protected Movement movement;
     [SerializeField] protected DamageSender damageSender;
     [SerializeField] protected List<Despawner> despawners;
-    [SerializeField] protected List<Chargement> chargements;
+    [SerializeField] protected List<Chargement> chargements; // ChargeBullet
 
     public void SetUser(IBullet user)
     {

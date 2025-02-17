@@ -2,13 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public interface IDetectByMouse : IDetector
+{
+    Transform GetMainObj(DetectByMouse component);
+}
+
 public class DetectByMouse : Detector
 {
     //==========================================Variable==========================================
     [Header("By Mouse")]
     [SerializeField] private InterfaceReference<IDetectByMouse> user1;
     [SerializeField] protected float detectRange;
-    [SerializeField] protected Transform target;
 
     //==========================================Get Set===========================================
     public IDetectByMouse User1 { get => user1.Value; set => user1.Value = value; }

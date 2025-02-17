@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public interface IDetectOnStay : IDetectByCollide
+{
+    bool CanRecharge(DetectOnStay component);
+}
+
 [RequireComponent(typeof(CircleCollider2D))]
 public class DetectOnStay : DetectByCollide
 {
@@ -58,6 +63,5 @@ public class DetectOnStay : DetectByCollide
     protected virtual void ResetCD()
     {
         this.detectCD.ResetStatus();
-        this.targets.Clear();
     }
 }

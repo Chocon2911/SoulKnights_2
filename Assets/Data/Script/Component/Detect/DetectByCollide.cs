@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public interface IDetectByCollide : IDetector
+{
+    Transform GetOwner(DetectByCollide component);
+}
+
+
 public abstract class DetectByCollide : Detector
 {
     //==========================================Variable==========================================
@@ -13,7 +19,21 @@ public abstract class DetectByCollide : Detector
     //==========================================Get Set===========================================
     public IDetectByCollide User1 { set => this.user1.Value = value; }
     public List<Transform> Targets => targets;
-    public override Transform Target => this.GetClosestTarget();
+    public override Transform Target
+    {
+        get
+        {
+            this.GetClosestTarget();
+            return base.Target;
+        }
+    }
+
+    //===========================================Unity============================================
+    public override void LoadComponents()
+    {
+        base.LoadComponents();
+        this.LoadComponent(ref this.detectCol, transform, "LoadDetectCol()");
+    }
 
     //==========================================Override==========================================
     public override void ResetTarget()
@@ -22,28 +42,40 @@ public abstract class DetectByCollide : Detector
     }
 
     //===========================================Method===========================================
-    protected virtual Transform GetClosestTarget()
+    protected virtual void GetClosestTarget()
     {
-        if (this.targets.Count == 0) return null;
+        this.target = null;
+        if (this.targets.Count == 0) return;
         Transform owner = this.user1.Value.GetOwner(this);
-        Transform closestTarget = null;
+        List<Transform> deletedTargets = new List<Transform>();
 
-        foreach (Transform target in this.targets)
+        foreach (Transform child in this.targets)
         {
-            if (closestTarget == null)
+            if (!this.IsObjInRange(child))
             {
-                closestTarget = target;
+                deletedTargets.Add(child);
                 continue;
             }
 
-            float targetDistance = Vector2.Distance(target.position, owner.position);
-            float currTargetDistance = Vector2.Distance(closestTarget.position, owner.position);
+            if (this.target == null)
+            {
+                this.target = child;
+                continue;
+            }
+
+            float targetDistance = Vector2.Distance(child.position, owner.position);
+            float currTargetDistance = Vector2.Distance(this.target.position, owner.position);
 
             if (targetDistance >= currTargetDistance) continue;
-            closestTarget = target;
+            this.target = child;
         }
+    }
 
-        return closestTarget;
+    protected bool IsObjInRange(Transform obj)
+    {
+        if (obj == null) return false;
+        Transform owner = this.user1.Value.GetOwner(this);
+        return Vector2.Distance(obj.position, owner.position) <= this.detectCol.radius;
     }
 
     //===========================================Detect===========================================
@@ -58,6 +90,12 @@ public abstract class DetectByCollide : Detector
         foreach (string tag in this.tags)
         {
             if (tag != col.tag) continue;
+            foreach (Transform child in this.targets)
+            {
+                if (child != col.transform) continue;
+                return;
+            }
+
             this.targets.Add(col.transform);
         }
     }
