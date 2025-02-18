@@ -4,6 +4,24 @@ using UnityEngine;
 
 public class HuyMonoBehaviour : MonoBehaviour
 {
+    //===========================================Unity============================================
+    protected virtual void Awake()
+    {
+        //this.LoadComponents();
+    }
+
+    protected virtual void OnEnable()
+    {
+        if (this is not ILateFixedUpdate lateFU) return;
+        SystemManager.Instance.AddLateFU(lateFU);
+    }
+
+    protected virtual void OnDisable()
+    {
+        if (this is not ILateFixedUpdate lateFU) return;
+        SystemManager.Instance.RemoveLateFU(lateFU);
+    }
+
     //===========================================Method===========================================
     public virtual void LoadComponents()
     {
@@ -42,11 +60,5 @@ public class HuyMonoBehaviour : MonoBehaviour
             so = Resources.Load<T>(filePath);
             Debug.LogWarning(transform.name + ": LoadSO()", transform.gameObject);
         }
-    }
-
-    //===========================================Unity============================================
-    protected virtual void Awake()
-    {
-        //this.LoadComponents();
     }
 }

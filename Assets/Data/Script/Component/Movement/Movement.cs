@@ -8,7 +8,6 @@ public interface IMovement
     Rigidbody2D GetRb(Movement component);
 }
 
-
 public class Movement : HuyMonoBehaviour
 {
     //==========================================Variable==========================================
@@ -40,7 +39,8 @@ public class Movement : HuyMonoBehaviour
 
     protected virtual void Move()
     {
-        this.user.Value.GetRb(this).velocity = this.moveDir * this.moveSpeed;
+        IMovement tempUser = this.user.Value;
+        tempUser.GetRb(this).velocity = this.moveDir * this.moveSpeed;
     }
 
     //===========================================Check============================================

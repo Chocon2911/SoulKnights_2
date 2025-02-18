@@ -460,6 +460,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   user:
     underlyingValue: {fileID: 79914718}
+--- !u!1 &216029161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 216029162}
+  - component: {fileID: 216029163}
+  m_Layer: 0
+  m_Name: System
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &216029162
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 216029161}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 496244246}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &216029163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 216029161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 604094221aca1fc42853159d0df1fbbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &228029229
 GameObject:
   m_ObjectHideFlags: 0
@@ -1092,6 +1136,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2144239916}
+  - {fileID: 216029162}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
@@ -1353,9 +1398,14 @@ MonoBehaviour:
   animator: {fileID: 1463036116}
   user:
     underlyingValue: {fileID: 0}
+  canMove: 0
+  detectCD:
+    timeLimit: 0
+    timer: 0
+    waitTime: 0
+    isReady: 0
   rb: {fileID: 603971444}
   col: {fileID: 603971443}
-  canMove: 0
   movement: {fileID: 1538829124}
   damageSender: {fileID: 709607987}
   despawners:
@@ -1679,9 +1729,14 @@ MonoBehaviour:
   animator: {fileID: 914838712}
   user:
     underlyingValue: {fileID: 0}
+  canMove: 0
+  detectCD:
+    timeLimit: 0
+    timer: 0
+    waitTime: 0
+    isReady: 0
   rb: {fileID: 759144397}
   col: {fileID: 759144396}
-  canMove: 0
   movement: {fileID: 2082339236}
   damageSender: {fileID: 24310407}
   despawners:
@@ -1903,6 +1958,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   user:
     underlyingValue: {fileID: 278869199}
+  target: {fileID: 0}
   tags:
   - Player
   user1:
@@ -3549,9 +3605,14 @@ MonoBehaviour:
   animator: {fileID: 915061146}
   user:
     underlyingValue: {fileID: 0}
+  canMove: 0
+  detectCD:
+    timeLimit: 0
+    timer: 0
+    waitTime: 0
+    isReady: 0
   rb: {fileID: 1914591314}
   col: {fileID: 1914591313}
-  canMove: 0
   movement: {fileID: 640269258}
   damageSender: {fileID: 577260720}
   despawners:
@@ -4290,7 +4351,7 @@ GameObject:
   - component: {fileID: 2144239916}
   - component: {fileID: 2144239917}
   m_Layer: 0
-  m_Name: InputManager
+  m_Name: Input
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5675,9 +5736,14 @@ MonoBehaviour:
   animator: {fileID: 1488802324518181761}
   user:
     underlyingValue: {fileID: 0}
+  canMove: 0
+  detectCD:
+    timeLimit: 0
+    timer: 0
+    waitTime: 0
+    isReady: 0
   rb: {fileID: 2139836089606283235}
   col: {fileID: 3374905637916376942}
-  canMove: 0
   movement: {fileID: 1306540070070475416}
   damageSender: {fileID: 1130536560510078632}
   despawners:
@@ -5893,9 +5959,14 @@ MonoBehaviour:
   animator: {fileID: 4472495928374024821}
   user:
     underlyingValue: {fileID: 0}
+  canMove: 0
+  detectCD:
+    timeLimit: 0
+    timer: 0
+    waitTime: 0
+    isReady: 0
   rb: {fileID: 9045785405865569259}
   col: {fileID: 1773888915106213113}
-  canMove: 0
   movement: {fileID: 7705802468965266475}
   damageSender: {fileID: 8025491312388231374}
   despawners:
@@ -7101,9 +7172,14 @@ MonoBehaviour:
   animator: {fileID: 7529472725378973490}
   user:
     underlyingValue: {fileID: 0}
+  canMove: 0
+  detectCD:
+    timeLimit: 0
+    timer: 0
+    waitTime: 0
+    isReady: 0
   rb: {fileID: 3163327057441476268}
   col: {fileID: 5688449048718166462}
-  canMove: 0
   movement: {fileID: 4368476588986683756}
   damageSender: {fileID: 4111563290584003977}
   despawners:
@@ -7305,9 +7381,14 @@ MonoBehaviour:
   animator: {fileID: 7991602962346394578}
   user:
     underlyingValue: {fileID: 0}
+  canMove: 0
+  detectCD:
+    timeLimit: 0
+    timer: 0
+    waitTime: 0
+    isReady: 0
   rb: {fileID: 3278491002536931916}
   col: {fileID: 5217562305644475742}
-  canMove: 0
   movement: {fileID: 4181061535818329484}
   damageSender: {fileID: 4582089398058928489}
   despawners:
@@ -7451,9 +7532,14 @@ MonoBehaviour:
   animator: {fileID: 6605951547511434356}
   user:
     underlyingValue: {fileID: 0}
+  canMove: 0
+  detectCD:
+    timeLimit: 0
+    timer: 0
+    waitTime: 0
+    isReady: 0
   rb: {fileID: 5960089333283809302}
   col: {fileID: 7048791982675921051}
-  canMove: 0
   movement: {fileID: 6711919772422876525}
   damageSender: {fileID: 4662418853747849565}
   despawners:

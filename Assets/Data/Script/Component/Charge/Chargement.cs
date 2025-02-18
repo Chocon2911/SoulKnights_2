@@ -41,7 +41,7 @@ public class Chargement : HuyMonoBehaviour
         this.StartingCharge();
     }
 
-    protected virtual void OnEnable()
+    protected override void OnEnable()
     {
         this.isFinish = false;
     }

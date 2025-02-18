@@ -14,13 +14,14 @@ public interface IBullet
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
 public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, IChargeMoveSpeed, 
-    IChargeScale, IDespawnByCollide
+    IChargeScale, IDespawnByCollide, IDetectByCollide
 {
     //==========================================Variable==========================================
     [Header("=====Bullet=====")]
     [Header("Stat")]
     [SerializeField] protected InterfaceReference<IBullet> user;
     [SerializeField] protected bool canMove;
+    [SerializeField] protected Cooldown detectCD; // HomingBullet
 
     [Header("Component")]
     [SerializeField] protected Rigidbody2D rb;
@@ -29,6 +30,10 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
     [SerializeField] protected DamageSender damageSender;
     [SerializeField] protected List<Despawner> despawners;
     [SerializeField] protected List<Chargement> chargements; // ChargeBullet
+    [SerializeField] protected Detector moveDetector; // HomingBullet
+
+    //==========================================Get Set===========================================
+    public List<Chargement> Chargements => this.chargements;
 
     public void SetUser(IBullet user)
     {
@@ -40,18 +45,26 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
         this.canMove = canMove;
     }
 
-    //===========================================public===========================================
-    public List<Chargement> Chargements => this.chargements;
+    //===========================================Method===========================================
+    protected virtual void RechargingDetect()
+    {
+        if (!this.canMove) return;
+        if (this.detectCD.IsReady) return;
+        this.RechargeDetect();
+    }
+
+    protected virtual void RechargeDetect()
+    {
+        this.detectCD.CoolingDown();
+    }
 
     //===========================================Unity============================================
     public override void LoadComponents()
     {
         base.LoadComponents();
-        // Stat
+        // Component
         this.LoadComponent(ref this.rb, transform, "LoadRb()");
         this.LoadComponent(ref this.col, transform, "LoadCol()");
-        
-        // Component
         this.LoadComponent(ref this.movement, transform.Find("Movement"), "LoadMovement()");
         this.movement.User = this;
         this.LoadComponent(ref this.damageSender, transform.Find("DamageSender"), "LoadDamageSender()");
@@ -60,6 +73,8 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
         foreach (Despawner despawner in this.despawners) despawner.User = this;
         this.LoadComponent(ref this.chargements, transform.Find("Charge"), "LoadChargements()");
         foreach (Chargement chargement in this.chargements) chargement.User = this;
+        this.LoadComponent(ref this.moveDetector, transform.Find("Detector"), "LoadMoveDetector()");
+        this.moveDetector.User = this;
 
         // ===Movement===
         // MoveForward
@@ -69,13 +84,15 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
         // DespawnByDistance
         foreach (Despawner despawner in this.despawners)
         {
-            if (despawner is DespawnByDistance despawnByDistance) despawnByDistance.User1 = this;
+            if (despawner is not DespawnByDistance despawnByDistance) continue;
+            despawnByDistance.User1 = this;
         }
 
         // DespawnByCollide
         foreach (Despawner despawner in this.despawners)
         {
-            if (despawner is DespawnByCollide despawnByCollide) despawnByCollide.User1 = this;
+            if (despawner is not DespawnByCollide despawnByCollide) continue;
+            despawnByCollide.User1 = this;
         }
 
         // ===Chargement===
@@ -94,17 +111,19 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
 
     protected virtual void FixedUpdate()
     {
-        this.BeforeMove();
+        this.RechargingDetect();
+        this.CheckMoving();
     }
 
-    protected virtual void OnDisable()
+    protected override void OnDisable()
     {
         this.canMove = false;
         this.col.enabled = false;
+        this.detectCD.ResetStatus();
     }
 
     //===========================================Method===========================================
-    protected virtual void BeforeMove()
+    protected virtual void CheckMoving()
     {
         if (!this.canMove) this.col.enabled = false;
         else this.col.enabled = true;
@@ -297,5 +316,17 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
 
         Util.Instance.IComponentErrorLog(transform, component.transform);
         return;
+    }
+
+    //=========================================IDetector==========================================
+    bool IDetector.CanDetect(Detector component)
+    {
+        return this.detectCD.IsReady;
+    }
+
+    //======================================IDetectByCollide======================================
+    Transform IDetectByCollide.GetOwner(DetectByCollide component)
+    {
+        return transform;
     }
 }

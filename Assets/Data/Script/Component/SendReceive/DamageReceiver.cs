@@ -25,9 +25,9 @@ public class DamageReceiver : HuyMonoBehaviour
     }
 
     //===========================================Method===========================================
-    public void Receive(DamageSender sender)
+    public void Receive(int damage)
     {
-        this.user.Value.ReduceHealth(this, sender.Damage);
+        this.user.Value.ReduceHealth(this, damage);
         this.isDamage = true;
     }
 }

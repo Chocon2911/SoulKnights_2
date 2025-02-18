@@ -21,7 +21,7 @@ public class DamageSender : HuyMonoBehaviour
     //===========================================Method===========================================
     public void Send(DamageReceiver receiver)
     {
-        receiver.Receive(this);
+        receiver.Receive(this.damage);
         this.user.Value.OnSending(this);
     }
 }

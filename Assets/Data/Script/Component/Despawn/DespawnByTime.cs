@@ -17,7 +17,7 @@ public class DespawnByTime : Despawner
         this.Despawning();
     }
 
-    protected virtual void OnEnable()
+    protected override void OnEnable()
     {
         this.despawnCD.ResetStatus();
     }

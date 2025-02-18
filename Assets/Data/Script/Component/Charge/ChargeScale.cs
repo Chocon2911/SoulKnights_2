@@ -21,7 +21,7 @@ public class ChargeScale : Chargement
     public List<float> ScaleMul { get => scaleMul; set => scaleMul = value; }
 
     //===========================================Unity============================================
-    protected virtual void OnDisable()
+    protected override void OnDisable()
     {
         this.user1.Value.ResetToDefaultScale(this);
     }
