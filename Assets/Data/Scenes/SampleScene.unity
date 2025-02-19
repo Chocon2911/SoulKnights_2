@@ -398,10 +398,12 @@ MonoBehaviour:
   id: 
   model: {fileID: 1851992395}
   animator: {fileID: 1851992396}
-  rb: {fileID: 79914715}
-  bodyCol: {fileID: 79914717}
   maxHealth: 10
   health: 10
+  rb: {fileID: 79914715}
+  bodyCol: {fileID: 79914717}
+  damageRecv: {fileID: 0}
+  pushBackRecv: {fileID: 0}
   maxMana: 10
   mana: 10
   maxAmor: 10
@@ -662,16 +664,17 @@ MonoBehaviour:
   id: 
   model: {fileID: 2005145774}
   animator: {fileID: 2005145773}
-  rb: {fileID: 278869201}
-  bodyCol: {fileID: 278869200}
   maxHealth: 10
   health: 10
+  rb: {fileID: 278869201}
+  bodyCol: {fileID: 278869200}
+  damageRecv: {fileID: 2072200808}
+  pushBackRecv: {fileID: 0}
   movement: {fileID: 1915421668}
   despawners:
   - {fileID: 1019997211}
   skill: {fileID: 1267162926}
   detector: {fileID: 856329946}
-  damageRecv: {fileID: 2072200808}
   objHolder: {fileID: 1780884218}
 --- !u!70 &278869200
 CapsuleCollider2D:
@@ -1137,6 +1140,7 @@ Transform:
   m_Children:
   - {fileID: 2144239916}
   - {fileID: 216029162}
+  - {fileID: 1660209941}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
@@ -1399,19 +1403,21 @@ MonoBehaviour:
   user:
     underlyingValue: {fileID: 0}
   canMove: 0
-  detectCD:
-    timeLimit: 0
-    timer: 0
-    waitTime: 0
-    isReady: 0
+  canPierce: 0
   rb: {fileID: 603971444}
   col: {fileID: 603971443}
   movement: {fileID: 1538829124}
   damageSender: {fileID: 709607987}
   despawners:
   - {fileID: 426980039}
+  damageDetector: {fileID: 0}
   chargements: []
   moveDetector: {fileID: 0}
+  moveDetectCD:
+    timeLimit: 0
+    timer: 0
+    waitTime: 0
+    isReady: 0
 --- !u!70 &603971443
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1730,19 +1736,21 @@ MonoBehaviour:
   user:
     underlyingValue: {fileID: 0}
   canMove: 0
-  detectCD:
-    timeLimit: 0
-    timer: 0
-    waitTime: 0
-    isReady: 0
+  canPierce: 0
   rb: {fileID: 759144397}
   col: {fileID: 759144396}
   movement: {fileID: 2082339236}
   damageSender: {fileID: 24310407}
   despawners:
   - {fileID: 1318611882}
+  damageDetector: {fileID: 0}
   chargements: []
   moveDetector: {fileID: 0}
+  moveDetectCD:
+    timeLimit: 0
+    timer: 0
+    waitTime: 0
+    isReady: 0
 --- !u!70 &759144396
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -2815,6 +2823,58 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1318562201
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1318562202}
+  - component: {fileID: 1318562203}
+  m_Layer: 0
+  m_Name: DamageDetector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1318562202
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318562201}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1798712158221342985}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1318562203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318562201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b7f63fb40e9a2e409ad59d4d4165f6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  user:
+    underlyingValue: {fileID: 4595823737930597396}
+  target: {fileID: 0}
+  tags: []
+  user1:
+    underlyingValue: {fileID: 4595823737930597396}
+  detectCol: {fileID: 0}
+  targets: []
 --- !u!1 &1318611880
 GameObject:
   m_ObjectHideFlags: 0
@@ -3085,6 +3145,58 @@ Transform:
   - {fileID: 3610957432487653216}
   m_Father: {fileID: 1153297376}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1532226688
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1532226689}
+  - component: {fileID: 1532226690}
+  m_Layer: 0
+  m_Name: DamageDetector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1532226689
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1532226688}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 735978334124303700}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1532226690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1532226688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b7f63fb40e9a2e409ad59d4d4165f6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  user:
+    underlyingValue: {fileID: 3942748917476336483}
+  target: {fileID: 0}
+  tags: []
+  user1:
+    underlyingValue: {fileID: 3942748917476336483}
+  detectCol: {fileID: 0}
+  targets: []
 --- !u!1 &1538829123
 GameObject:
   m_ObjectHideFlags: 0
@@ -3234,6 +3346,50 @@ MonoBehaviour:
     timer: 0
     waitTime: 0.02
     isReady: 0
+--- !u!1 &1660209940
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1660209941}
+  - component: {fileID: 1660209942}
+  m_Layer: 0
+  m_Name: SubSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1660209941
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660209940}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 496244246}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1660209942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660209940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b46c6f1e0f5f4845b336c1582186353, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1778716324
 GameObject:
   m_ObjectHideFlags: 0
@@ -3606,11 +3762,7 @@ MonoBehaviour:
   user:
     underlyingValue: {fileID: 0}
   canMove: 0
-  detectCD:
-    timeLimit: 0
-    timer: 0
-    waitTime: 0
-    isReady: 0
+  canPierce: 0
   rb: {fileID: 1914591314}
   col: {fileID: 1914591313}
   movement: {fileID: 640269258}
@@ -3618,9 +3770,15 @@ MonoBehaviour:
   despawners:
   - {fileID: 1637758370}
   - {fileID: 246505119}
+  damageDetector: {fileID: 0}
   chargements:
   - {fileID: 873424217}
   moveDetector: {fileID: 0}
+  moveDetectCD:
+    timeLimit: 0
+    timer: 0
+    waitTime: 0
+    isReady: 0
 --- !u!4 &1914591312
 Transform:
   m_ObjectHideFlags: 0
@@ -4654,6 +4812,7 @@ Transform:
   - {fileID: 565258304408350954}
   - {fileID: 7632735678199810632}
   - {fileID: 2756322578635967358}
+  - {fileID: 1532226689}
   m_Father: {fileID: 1001297772}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &745967683231913425
@@ -5075,6 +5234,7 @@ Transform:
   - {fileID: 1530645108118504297}
   - {fileID: 5198573802779640372}
   - {fileID: 3912409218735908080}
+  - {fileID: 1318562202}
   m_Father: {fileID: 1001297772}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1839923927697659185
@@ -5737,11 +5897,7 @@ MonoBehaviour:
   user:
     underlyingValue: {fileID: 0}
   canMove: 0
-  detectCD:
-    timeLimit: 0
-    timer: 0
-    waitTime: 0
-    isReady: 0
+  canPierce: 0
   rb: {fileID: 2139836089606283235}
   col: {fileID: 3374905637916376942}
   movement: {fileID: 1306540070070475416}
@@ -5749,9 +5905,15 @@ MonoBehaviour:
   despawners:
   - {fileID: 6868643385271527311}
   - {fileID: 415570428899521650}
+  damageDetector: {fileID: 1532226690}
   chargements:
   - {fileID: 6275050264733714969}
   moveDetector: {fileID: 0}
+  moveDetectCD:
+    timeLimit: 0
+    timer: 0
+    waitTime: 0
+    isReady: 0
 --- !u!1 &4041885243243628554
 GameObject:
   m_ObjectHideFlags: 0
@@ -5960,19 +6122,21 @@ MonoBehaviour:
   user:
     underlyingValue: {fileID: 0}
   canMove: 0
-  detectCD:
-    timeLimit: 0
-    timer: 0
-    waitTime: 0
-    isReady: 0
+  canPierce: 0
   rb: {fileID: 9045785405865569259}
   col: {fileID: 1773888915106213113}
   movement: {fileID: 7705802468965266475}
   damageSender: {fileID: 8025491312388231374}
   despawners:
   - {fileID: 3297157401081252033}
+  damageDetector: {fileID: 1318562203}
   chargements: []
   moveDetector: {fileID: 0}
+  moveDetectCD:
+    timeLimit: 0
+    timer: 0
+    waitTime: 0
+    isReady: 0
 --- !u!114 &4662418853747849565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7173,19 +7337,21 @@ MonoBehaviour:
   user:
     underlyingValue: {fileID: 0}
   canMove: 0
-  detectCD:
-    timeLimit: 0
-    timer: 0
-    waitTime: 0
-    isReady: 0
+  canPierce: 0
   rb: {fileID: 3163327057441476268}
   col: {fileID: 5688449048718166462}
   movement: {fileID: 4368476588986683756}
   damageSender: {fileID: 4111563290584003977}
   despawners:
   - {fileID: 8912249808544492934}
+  damageDetector: {fileID: 0}
   chargements: []
   moveDetector: {fileID: 0}
+  moveDetectCD:
+    timeLimit: 0
+    timer: 0
+    waitTime: 0
+    isReady: 0
 --- !u!212 &7625990465886637978
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -7382,19 +7548,21 @@ MonoBehaviour:
   user:
     underlyingValue: {fileID: 0}
   canMove: 0
-  detectCD:
-    timeLimit: 0
-    timer: 0
-    waitTime: 0
-    isReady: 0
+  canPierce: 0
   rb: {fileID: 3278491002536931916}
   col: {fileID: 5217562305644475742}
   movement: {fileID: 4181061535818329484}
   damageSender: {fileID: 4582089398058928489}
   despawners:
   - {fileID: 9022756226936541542}
+  damageDetector: {fileID: 0}
   chargements: []
   moveDetector: {fileID: 0}
+  moveDetectCD:
+    timeLimit: 0
+    timer: 0
+    waitTime: 0
+    isReady: 0
 --- !u!212 &8020096112886625146
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -7533,11 +7701,7 @@ MonoBehaviour:
   user:
     underlyingValue: {fileID: 0}
   canMove: 0
-  detectCD:
-    timeLimit: 0
-    timer: 0
-    waitTime: 0
-    isReady: 0
+  canPierce: 0
   rb: {fileID: 5960089333283809302}
   col: {fileID: 7048791982675921051}
   movement: {fileID: 6711919772422876525}
@@ -7545,9 +7709,15 @@ MonoBehaviour:
   despawners:
   - {fileID: 1177153614905397370}
   - {fileID: 5386343808181240711}
+  damageDetector: {fileID: 0}
   chargements:
   - {fileID: 1734220956938698220}
   moveDetector: {fileID: 0}
+  moveDetectCD:
+    timeLimit: 0
+    timer: 0
+    waitTime: 0
+    isReady: 0
 --- !u!4 &8896242102658791559
 Transform:
   m_ObjectHideFlags: 0

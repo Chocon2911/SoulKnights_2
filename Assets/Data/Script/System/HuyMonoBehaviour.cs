@@ -30,25 +30,22 @@ public class HuyMonoBehaviour : MonoBehaviour
 
     protected void LoadComponent<T>(ref T component, Transform obj, string message)
     {
-        if (component == null || component.Equals(null))
-        {
-            component = obj.GetComponent<T>();
-            Debug.LogWarning(transform.name + ": " + message, transform.gameObject);
-        }
+        if (obj == null) return;
+        component = obj.GetComponent<T>();
+        Debug.LogWarning(transform.name + ": " + message, transform.gameObject);
     }
 
     protected void LoadChildComponent<T>(ref T component, Transform obj, string message)
     {
-        if (component == null || component.Equals(null))
-        {
-            component = obj.GetComponentInChildren<T>(true);
-            Debug.LogWarning(transform.name + ": " + message, transform.gameObject);
-        }
+        if (obj == null) return;
+        component = obj.GetComponentInChildren<T>(true);
+        Debug.LogWarning(transform.name + ": " + message, transform.gameObject);
     }
 
     protected virtual void LoadComponent<T>(ref List<T> components, Transform obj, string message)
     {
-        components.Clear();
+        components = new List<T>();
+        if (obj == null) return;
         foreach (Transform child in obj) components.Add(child.GetComponent<T>());
         Debug.LogWarning(transform.name + ": " + message, transform.gameObject);
     }

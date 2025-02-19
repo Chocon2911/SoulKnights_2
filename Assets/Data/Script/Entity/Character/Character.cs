@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CapsuleCollider2D))]
-public class Character : Entity
+public class Character : Entity, IDamageReceiver, IPushBackReceiver
 {
     //==========================================Variable==========================================
     [Header("=====Character=====")]
@@ -26,5 +26,26 @@ public class Character : Entity
         this.LoadComponent(ref this.bodyCol, transform, "LoadBodyCol()");
         this.LoadComponent(ref this.damageRecv, transform.Find("DamageRecv"), "LoadDamageRecv()");
         this.LoadComponent(ref this.pushBackRecv, transform.Find("PushBackRecv"), "LoadPushBackRecv()");
+    }
+
+    //============================================================================================
+    //=========================================Interface==========================================
+    //============================================================================================
+
+    //======================================IDamageReceiver=======================================
+    void IDamageReceiver.ReduceHealth(DamageReceiver component, int damage)
+    {
+        this.health -= damage;
+    }
+
+    //=====================================IPushBackReceiver======================================
+    bool IPushBackReceiver.CanPushBack(PushBackReceiver component)
+    {
+        return true;
+    }
+
+    Rigidbody2D IPushBackReceiver.GetRb(PushBackReceiver component)
+    {
+        return this.rb;
     }
 }

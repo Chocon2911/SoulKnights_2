@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, IDetectOnStay, 
-    IDamageReceiver, IObjHolder
+    IObjHolder
 {
     //==========================================Variable==========================================
     [Header("=====Creep=====")]
@@ -11,7 +11,6 @@ public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, ID
     [SerializeField] protected List<Despawner> despawners;
     [SerializeField] protected Skill skill;
     [SerializeField] protected Detector detector;
-    [SerializeField] protected DamageReceiver damageRecv;
     [SerializeField] protected ObjHolder objHolder;
 
     //===========================================Unity============================================
@@ -27,8 +26,6 @@ public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, ID
         this.skill.User = this;
         this.LoadComponent(ref this.detector, transform.Find("Detector"), "LoadDetector()");
         this.detector.User = this;
-        this.LoadComponent(ref this.damageRecv, transform.Find("DamageRecv"), "LoadDamageRecv()");
-        this.damageRecv.User = this;
         this.LoadComponent(ref this.objHolder, transform.Find("Hold"), "LoadObjHolder()");
         this.objHolder.User = this;
 
@@ -174,18 +171,6 @@ public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, ID
     bool IDetectOnStay.CanRecharge(DetectOnStay component)
     {
         return true;
-    }
-
-
-
-    //============================================================================================
-    //=======================================DamageReceiver=======================================
-    //============================================================================================
-
-    //======================================IDamageReceiver=======================================
-    void IDamageReceiver.ReduceHealth(DamageReceiver component, int damage)
-    {
-        this.health -= damage;
     }
 
 

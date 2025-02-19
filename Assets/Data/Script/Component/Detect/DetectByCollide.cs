@@ -7,7 +7,6 @@ public interface IDetectByCollide : IDetector
     Transform GetOwner(DetectByCollide component);
 }
 
-
 public abstract class DetectByCollide : Detector
 {
     //==========================================Variable==========================================

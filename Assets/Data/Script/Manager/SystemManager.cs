@@ -11,29 +11,34 @@ public class SystemManager : HuyMonoBehaviour
 {
     //==========================================Variable==========================================
     [Header("System Manager")]
-    private static SystemManager instance;
-    [SerializeField] protected List<ILateFixedUpdate> lateFUs;
+    [SerializeField] private static SystemManager instance;
+    [SerializeField] protected List<ILateFixedUpdate> lateFUs = new List<ILateFixedUpdate>();
 
     //==========================================Get Set===========================================
-    public static SystemManager Instance
-    {
-        get
-        {
-            if (instance == null) instance = FindAnyObjectByType<SystemManager>();
-            return instance;
-        }
-    }
+    public static SystemManager Instance => instance;
 
     //===========================================Unity============================================
-    private void FixedUpdate() // LateFixedUpdate()
+    protected override void Awake()
     {
+        if (instance != null)
+        {
+            Debug.LogError("One SystemManager Only", transform.gameObject);
+            return;
+        }
+
+        instance = this;
+    }
+
+    //===========================================Method===========================================
+    public void LateFixedUpdate()
+    {
+        if (this.lateFUs.Count == 0) return;
         foreach (ILateFixedUpdate child in this.lateFUs)
         {
             child.LateFixedUpdate();
         }
     }
-
-    //===========================================Method===========================================
+    
     public void AddLateFU(ILateFixedUpdate child)
     {
         this.lateFUs.Add(child);

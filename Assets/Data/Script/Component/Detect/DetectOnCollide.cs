@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DetectOnCollide : DetectByCollide
+public class DetectOnCollide : DetectByCollide, ILateFixedUpdate
 {
     //===========================================Unity============================================
     protected virtual void OnTriggerEnter2D(Collider2D collision)
@@ -10,8 +10,9 @@ public class DetectOnCollide : DetectByCollide
         this.Detecting(collision);
     }
 
-    protected virtual void OnTriggerExit2D(Collider2D collision)
+    //======================================ILateFixedUpdate======================================
+    void ILateFixedUpdate.LateFixedUpdate()
     {
-        this.targets.Remove(collision.transform);
+        this.targets.Clear();
     }
 }
