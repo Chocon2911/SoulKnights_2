@@ -7,12 +7,13 @@ public interface IDetectByCollide : IDetector
     Transform GetOwner(DetectByCollide component);
 }
 
+[RequireComponent(typeof(CapsuleCollider2D))]
 public abstract class DetectByCollide : Detector
 {
     //==========================================Variable==========================================
     [Header("By Collide")]
     [SerializeField] protected InterfaceReference<IDetectByCollide> user1;
-    [SerializeField] protected CircleCollider2D detectCol;
+    [SerializeField] protected CapsuleCollider2D detectCol;
     [SerializeField] protected List<Transform> targets;
 
     //==========================================Get Set===========================================
@@ -34,6 +35,12 @@ public abstract class DetectByCollide : Detector
         this.LoadComponent(ref this.detectCol, transform, "LoadDetectCol()");
     }
 
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        this.targets.Clear();
+    }
+
     //==========================================Override==========================================
     public override void ResetTarget()
     {
@@ -50,12 +57,6 @@ public abstract class DetectByCollide : Detector
 
         foreach (Transform child in this.targets)
         {
-            if (!this.IsObjInRange(child))
-            {
-                deletedTargets.Add(child);
-                continue;
-            }
-
             if (this.target == null)
             {
                 this.target = child;
@@ -68,13 +69,6 @@ public abstract class DetectByCollide : Detector
             if (targetDistance >= currTargetDistance) continue;
             this.target = child;
         }
-    }
-
-    protected bool IsObjInRange(Transform obj)
-    {
-        if (obj == null) return false;
-        Transform owner = this.user1.Value.GetOwner(this);
-        return Vector2.Distance(obj.position, owner.position) <= this.detectCol.radius;
     }
 
     //===========================================Detect===========================================

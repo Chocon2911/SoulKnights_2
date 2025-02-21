@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public interface IBullet
 {
@@ -15,8 +14,9 @@ public interface IBullet
 }
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
-public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, IChargeMoveSpeed, 
-    IChargeScale, IDespawnByCollide, IDetectByCollide, IDetectOnStay
+public class Bullet : Entity, IDamageSender, IPushBackSender, IDespawnByDistance, 
+    IDespawnByCollide, IMoveForward, IChargeMoveSpeed, IChargeScale, IDetectByCollide, 
+    IDetectOnStay
 {
     //==========================================Variable==========================================
     [Header("=====Bullet=====")]
@@ -24,6 +24,9 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
     [SerializeField] protected InterfaceReference<IBullet> user;
     [SerializeField] protected bool canMove;
     [SerializeField] protected bool canPierce;
+
+    [Header("Optional Stat")]
+    [SerializeField] protected List<Transform> collidedTargets; // PierceBullet
 
     [Header("Component")]
     [SerializeField] protected Rigidbody2D rb;
@@ -63,6 +66,10 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
         this.movement.User = this;
         this.LoadComponent(ref this.damageSender, transform.Find("DamageSender"), "LoadDamageSender()");
         this.damageSender.User = this;
+        this.LoadComponent(ref this.pushBackSender, transform.Find("PushBackSender"), "LoadPushBackSender()");
+        this.pushBackSender.User = this;
+        this.LoadComponent(ref this.detector, transform.Find("Detector"), "LoadDetector()");
+        this.detector.User = this;
         this.LoadComponent(ref this.despawners, transform.Find("Despawn"), "LoadDespawners()");
         if (this.despawners.Count > 0)
             foreach (Despawner despawner in this.despawners) despawner.User = this;
@@ -88,7 +95,7 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
             despawnByCollide.User1 = this;
         }
 
-        // ===DamageDetector===
+        // ===Detector===
         // DetectByCollide
         if (this.detector is DetectByCollide detectByCollide2) detectByCollide2.User1 = this;
 
@@ -103,23 +110,29 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
 
         // ===Chargement===
         // ChargeMoveSpeed
-        foreach (Chargement charge in this.chargements)
+        if (this.chargements.Count > 0)
         {
-            if (charge is ChargeMoveSpeed chargeMoveSpeed) chargeMoveSpeed.User1 = this;
-        }
+            foreach (Chargement charge in this.chargements)
+            {
+                if (charge is ChargeMoveSpeed chargeMoveSpeed) chargeMoveSpeed.User1 = this;
+            }
 
-        // ChargeScale
-        foreach (Chargement charge in this.chargements)
-        {
-            if (charge is ChargeScale chargeScale) chargeScale.User1 = this;
+            // ChargeScale
+            foreach (Chargement charge in this.chargements)
+            {
+                if (charge is ChargeScale chargeScale) chargeScale.User1 = this;
+            }
         }
 
         // ===MoveDetector===
-        // DetectByCollide
-        if (this.moveDetector is DetectByCollide detectByCollide) detectByCollide.User1 = this;
+        if (this.moveDetector != null)
+        {
+            // DetectByCollide
+            if (this.moveDetector is DetectByCollide detectByCollide) detectByCollide.User1 = this;
 
-        // DetectOnStay
-        if (this.moveDetector is DetectOnStay detectOnStay) detectOnStay.User1 = this;
+            // DetectOnStay
+            if (this.moveDetector is DetectOnStay detectOnStay) detectOnStay.User1 = this;
+        }
     }
 
     protected virtual void Update()
@@ -139,6 +152,7 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
         this.canMove = false;
         this.col.enabled = false;
         this.moveDetectCD.ResetStatus();
+        this.collidedTargets.Clear();
     }
 
 
@@ -172,6 +186,16 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
     {
         Transform target = this.detector.Target;
         if (target == null) return;
+
+        if (this.collidedTargets.Count > 0)
+        {
+            foreach (Transform collidedTarget in this.collidedTargets)
+            {
+                if (collidedTarget == target) return;
+            }
+        }
+
+        this.collidedTargets.Add(target);
         this.SendDamage(target);
         this.SendPushBack(target);
     }
@@ -223,11 +247,28 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
     {
         if (this.damageSender == component)
         {
+            if (this.canPierce) return;
             BulletSpawner.Instance.Despawn(transform);
+            return;
         }
 
         Util.Instance.IComponentErrorLog(transform, component.transform);
         return;
+    }
+
+    //======================================IPushBackSender=======================================
+    Vector2 IPushBackSender.GetDir(PushBackSender component)
+    {
+        if (this.pushBackSender == component)
+        {
+            float angle = transform.eulerAngles.z;
+            float xDir = Mathf.Cos(angle * Mathf.Deg2Rad);
+            float yDir = Mathf.Sin(angle * Mathf.Deg2Rad);
+            return new Vector2(xDir, yDir);
+        }
+
+        Util.Instance.IComponentErrorLog(transform, component.transform);
+        return Vector2.zero;
     }
 
     //=========================================IDespawner=========================================
@@ -384,7 +425,20 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
     //=========================================IDetector==========================================
     bool IDetector.CanDetect(Detector component)
     {
-        return this.moveDetectCD.IsReady;
+        // Detector
+        if (this.detector == component)
+        {
+            return true;
+        }
+
+        // MoveDetector
+        if (this.moveDetector == component)
+        {
+            return this.moveDetectCD.IsReady;
+        }
+
+        Util.Instance.IComponentErrorLog(transform, component.transform);
+        return false;
     }
 
     //======================================IDetectByCollide======================================

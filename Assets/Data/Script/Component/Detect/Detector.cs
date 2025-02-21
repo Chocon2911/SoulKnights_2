@@ -20,6 +20,13 @@ public abstract class Detector : HuyMonoBehaviour
     public IDetector User { get => user.Value; set => user.Value = value; }
     public virtual Transform Target => target;
 
+    //===========================================Unity============================================
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        this.target = null;
+    }
+
     //===========================================public===========================================
     public abstract void ResetTarget();
 }

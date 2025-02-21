@@ -15,10 +15,13 @@ public class PushBackReceiver : HuyMonoBehaviour, ILateFixedUpdate
     [SerializeField] protected float recvForce;
     [SerializeField] protected Cooldown cd;
     [SerializeField] protected Vector2 dir;
+    [SerializeField] protected bool isPushBack;
 
     //==========================================Get Set===========================================
+    public IPushBackReceiver User { set => this.user.Value = value; }
     public float RecvForce => recvForce;
     public Vector2 Dir => dir;
+    public bool IsPushBack => isPushBack;
 
     //===========================================Unity============================================
     protected virtual void Update()
@@ -51,13 +54,13 @@ public class PushBackReceiver : HuyMonoBehaviour, ILateFixedUpdate
     {
         this.user.Value.GetRb(this).velocity += this.recvForce * this.dir;
         this.recvForce = 0;
+        this.isPushBack = true;
     }
 
     //==========================================Recharge==========================================
     protected virtual void Recharging()
     {
-        if (this.cd.TimeLimit <= 0) return;
-        if (!this.cd.IsReady) return;
+        if (this.cd.IsReady) return;
         this.Recharge();
     }
 
@@ -77,6 +80,7 @@ public class PushBackReceiver : HuyMonoBehaviour, ILateFixedUpdate
     {
         this.recvForce = 0;
         this.dir = Vector2.zero;
+        this.user.Value.GetRb(this).velocity = Vector2.zero;
         this.cd.TimeLimit = 0;
         this.cd.ResetStatus();
     }
@@ -85,5 +89,6 @@ public class PushBackReceiver : HuyMonoBehaviour, ILateFixedUpdate
     void ILateFixedUpdate.LateFixedUpdate()
     {
         this.PushingBack();
+        this.isPushBack = false;
     }
 }

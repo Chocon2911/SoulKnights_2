@@ -25,8 +25,12 @@ public class Character : Entity, IDamageReceiver, IPushBackReceiver
         this.LoadComponent(ref this.rb, transform, "LoadRb()");
         this.LoadComponent(ref this.bodyCol, transform, "LoadBodyCol()");
         this.LoadComponent(ref this.damageRecv, transform.Find("DamageRecv"), "LoadDamageRecv()");
+        this.damageRecv.User = this;
         this.LoadComponent(ref this.pushBackRecv, transform.Find("PushBackRecv"), "LoadPushBackRecv()");
+        this.pushBackRecv.User = this;
     }
+
+
 
     //============================================================================================
     //=========================================Interface==========================================

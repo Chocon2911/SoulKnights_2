@@ -8,7 +8,6 @@ public interface IDetectOnStay : IDetectByCollide
     bool CanRecharge(DetectOnStay component);
 }
 
-[RequireComponent(typeof(CircleCollider2D))]
 public class DetectOnStay : DetectByCollide
 {
     //==========================================Variable==========================================
@@ -20,6 +19,12 @@ public class DetectOnStay : DetectByCollide
     public IDetectOnStay User2 { set => user2.Value = value; }
 
     //===========================================Unity============================================
+    public override void LoadComponents()
+    {
+        base.LoadComponents();
+        this.detectCol.isTrigger = true;
+    }
+
     protected virtual void OnTriggerStay2D(Collider2D collision)
     {
         this.Detecting(collision);

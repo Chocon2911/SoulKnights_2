@@ -58,7 +58,8 @@ public class Creep : Character, IMoveRandomly, IDespawnByHealth, IShootSkill, ID
     //=========================================IMovement==========================================
     bool IMovement.CanMove(Movement component)
     {
-        return this.damageRecv.IsDamage == false;
+        if (this.pushBackRecv.IsPushBack) return false;
+        return true;
     }
 
     Rigidbody2D IMovement.GetRb(Movement component)

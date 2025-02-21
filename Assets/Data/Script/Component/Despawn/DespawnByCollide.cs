@@ -19,7 +19,7 @@ public class DespawnByCollide : Despawner
     [SerializeField] protected int currCollide;
 
     //==========================================Get Set===========================================
-    public IDespawnByCollide User1 { get => user1.Value; set => user1.Value = value; }
+    public IDespawnByCollide User1 { set => user1.Value = value; }
     public int MaxCollide { get => maxCollide; set => maxCollide = value; }
     public int CurrCollide { get => currCollide; set => currCollide = value; }
 

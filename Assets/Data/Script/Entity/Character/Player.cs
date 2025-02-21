@@ -90,6 +90,7 @@ public class Player : Character, IMovement, IRegen, IDashSkill, IInventory, IPic
         if (this.movement == component)
         {
             if (this.dash.CanDash) return false;
+            if (this.pushBackRecv.IsPushBack) return false;
             else return true;
         }
 
