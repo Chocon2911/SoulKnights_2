@@ -40,6 +40,7 @@ public class Inventory : HuyMonoBehaviour, IWeapon
 
     protected override void OnEnable()
     {
+        base.OnEnable();
         this.GetChosenWeapon().gameObject.SetActive(true);
     }
 

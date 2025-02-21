@@ -45,6 +45,7 @@ public class Weapon : Entity, ISkill, IObjHolder, IObjTurning, IShootSkill
 
     protected override void OnEnable()
     {
+        base.OnEnable();
         this.objHolder.Holding();
     }
 

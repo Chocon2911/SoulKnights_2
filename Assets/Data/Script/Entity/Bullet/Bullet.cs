@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public interface IBullet
 {
@@ -29,8 +30,9 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
     [SerializeField] protected CapsuleCollider2D col;
     [SerializeField] protected Movement movement;
     [SerializeField] protected DamageSender damageSender;
+    [SerializeField] protected PushBackSender pushBackSender;
     [SerializeField] protected List<Despawner> despawners;
-    [SerializeField] protected Detector damageDetector;
+    [SerializeField] protected Detector detector;
 
     [Header("Optional Component")]
     [SerializeField] protected List<Chargement> chargements; // ChargeBullet
@@ -50,33 +52,11 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
         this.canMove = canMove;
     }
 
-    //===========================================Detect===========================================
-    protected virtual void RechargingDetect()
-    {
-        if (!this.canMove) return;
-        if (this.moveDetectCD.IsReady) return;
-        this.RechargeDetect();
-    }
-
-    protected virtual void RechargeDetect()
-    {
-        this.moveDetectCD.CoolingDown();
-    }
-
-    //===========================================Damage===========================================
-    protected virtual void DamageSending()
-    {
-        Transform target = this.damageDetector.Target;
-        if (target == null) return;
-        DamageReceiver receiver = target.GetComponentInChildren<DamageReceiver>();
-        this.damageSender.Send(receiver);
-    }
-
     //===========================================Unity============================================
     public override void LoadComponents()
     {
         base.LoadComponents();
-        // ===Component===
+        //=========================================Component==========================================
         this.LoadComponent(ref this.rb, transform, "LoadRb()");
         this.LoadComponent(ref this.col, transform, "LoadCol()");
         this.LoadComponent(ref this.movement, transform.Find("Movement"), "LoadMovement()");
@@ -86,8 +66,8 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
         this.LoadComponent(ref this.despawners, transform.Find("Despawn"), "LoadDespawners()");
         if (this.despawners.Count > 0)
             foreach (Despawner despawner in this.despawners) despawner.User = this;
-        this.LoadComponent(ref this.damageDetector, transform.Find("DamageDetector"), "LoadDamageDetector()");
-        this.damageDetector.User = this;
+        this.LoadComponent(ref this.detector, transform.Find("DamageDetector"), "LoadDamageDetector()");
+        this.detector.User = this;
 
         // ===Movement===
         // MoveForward
@@ -110,15 +90,11 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
 
         // ===DamageDetector===
         // DetectByCollide
-        if (this.damageDetector is DetectByCollide detectByCollide2) detectByCollide2.User1 = this;
+        if (this.detector is DetectByCollide detectByCollide2) detectByCollide2.User1 = this;
 
 
 
-        //============================================================================================
-
-
-
-        // ===Optional===
+        //=====================================Optional Component=====================================
         this.LoadComponent(ref this.chargements, transform.Find("Charge"), "LoadChargements()");
         if (this.chargements.Count > 0)
             foreach (Chargement chargement in this.chargements) chargement.User = this;
@@ -146,26 +122,73 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
         if (this.moveDetector is DetectOnStay detectOnStay) detectOnStay.User1 = this;
     }
 
+    protected virtual void Update()
+    {
+        this.CheckMoving();
+    }
+
     protected virtual void FixedUpdate()
     {
         this.RechargingDetect();
-        this.CheckMoving();
-        this.DamageSending();
+        this.Colliding();
     }
 
     protected override void OnDisable()
     {
+        base.OnDisable();
         this.canMove = false;
         this.col.enabled = false;
         this.moveDetectCD.ResetStatus();
     }
 
+
+
+    //============================================================================================
     //===========================================Method===========================================
+    //============================================================================================
+
+    //============================================Move============================================
     protected virtual void CheckMoving()
     {
         if (!this.canMove) this.col.enabled = false;
         else this.col.enabled = true;
     }
+
+    //===========================================Detect===========================================
+    protected virtual void RechargingDetect()
+    {
+        if (!this.canMove) return;
+        if (this.moveDetectCD.IsReady) return;
+        this.RechargeDetect();
+    }
+
+    protected virtual void RechargeDetect()
+    {
+        this.moveDetectCD.CoolingDown();
+    }
+
+    //==========================================Collide===========================================
+    protected virtual void Colliding()
+    {
+        Transform target = this.detector.Target;
+        if (target == null) return;
+        this.SendDamage(target);
+        this.SendPushBack(target);
+    }
+    
+    protected virtual void SendDamage(Transform target)
+    {
+        DamageReceiver receiver = target.GetComponentInChildren<DamageReceiver>();
+        this.damageSender.Send(receiver);
+    }
+
+    protected virtual void SendPushBack(Transform target)
+    {
+        PushBackReceiver pushBackReceiver = target.GetComponentInChildren<PushBackReceiver>();
+        this.pushBackSender.Send(pushBackReceiver);
+    }
+
+
 
     //============================================================================================
     //=========================================Interface==========================================
@@ -246,7 +269,7 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
     }
 
     //=====================================IDespawnByDistance=====================================
-    public Transform GetTarget(DespawnByDistance component)
+    Transform IDespawnByDistance.GetTarget(DespawnByDistance component)
     {
         foreach (Despawner despawner in this.despawners)
         {
@@ -374,9 +397,9 @@ public class Bullet : Entity, IDamageSender, IDespawnByDistance, IMoveForward, I
     bool IDetectOnStay.CanRecharge(DetectOnStay component)
     {
         // DamageDetector
-        if (component == this.damageDetector)
+        if (component == this.detector)
         {
-            return this.damageDetector.Target != null;
+            return this.detector.Target != null;
         }
 
         Util.Instance.IComponentErrorLog(transform, component.transform);

@@ -472,6 +472,7 @@ GameObject:
   m_Component:
   - component: {fileID: 216029162}
   - component: {fileID: 216029163}
+  - component: {fileID: 216029164}
   m_Layer: 0
   m_Name: System
   m_TagString: Untagged
@@ -504,6 +505,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 604094221aca1fc42853159d0df1fbbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &216029164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 216029161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b46c6f1e0f5f4845b336c1582186353, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &228029229
@@ -1140,7 +1153,6 @@ Transform:
   m_Children:
   - {fileID: 2144239916}
   - {fileID: 216029162}
-  - {fileID: 1660209941}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
@@ -1408,9 +1420,10 @@ MonoBehaviour:
   col: {fileID: 603971443}
   movement: {fileID: 1538829124}
   damageSender: {fileID: 709607987}
+  pushBackSender: {fileID: 0}
   despawners:
   - {fileID: 426980039}
-  damageDetector: {fileID: 0}
+  detector: {fileID: 0}
   chargements: []
   moveDetector: {fileID: 0}
   moveDetectCD:
@@ -1741,9 +1754,10 @@ MonoBehaviour:
   col: {fileID: 759144396}
   movement: {fileID: 2082339236}
   damageSender: {fileID: 24310407}
+  pushBackSender: {fileID: 0}
   despawners:
   - {fileID: 1318611882}
-  damageDetector: {fileID: 0}
+  detector: {fileID: 0}
   chargements: []
   moveDetector: {fileID: 0}
   moveDetectCD:
@@ -3346,50 +3360,6 @@ MonoBehaviour:
     timer: 0
     waitTime: 0.02
     isReady: 0
---- !u!1 &1660209940
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1660209941}
-  - component: {fileID: 1660209942}
-  m_Layer: 0
-  m_Name: SubSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1660209941
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1660209940}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 496244246}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1660209942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1660209940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b46c6f1e0f5f4845b336c1582186353, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1778716324
 GameObject:
   m_ObjectHideFlags: 0
@@ -3767,10 +3737,11 @@ MonoBehaviour:
   col: {fileID: 1914591313}
   movement: {fileID: 640269258}
   damageSender: {fileID: 577260720}
+  pushBackSender: {fileID: 0}
   despawners:
   - {fileID: 1637758370}
   - {fileID: 246505119}
-  damageDetector: {fileID: 0}
+  detector: {fileID: 0}
   chargements:
   - {fileID: 873424217}
   moveDetector: {fileID: 0}
@@ -5902,10 +5873,11 @@ MonoBehaviour:
   col: {fileID: 3374905637916376942}
   movement: {fileID: 1306540070070475416}
   damageSender: {fileID: 1130536560510078632}
+  pushBackSender: {fileID: 0}
   despawners:
   - {fileID: 6868643385271527311}
   - {fileID: 415570428899521650}
-  damageDetector: {fileID: 1532226690}
+  detector: {fileID: 0}
   chargements:
   - {fileID: 6275050264733714969}
   moveDetector: {fileID: 0}
@@ -6127,9 +6099,10 @@ MonoBehaviour:
   col: {fileID: 1773888915106213113}
   movement: {fileID: 7705802468965266475}
   damageSender: {fileID: 8025491312388231374}
+  pushBackSender: {fileID: 0}
   despawners:
   - {fileID: 3297157401081252033}
-  damageDetector: {fileID: 1318562203}
+  detector: {fileID: 0}
   chargements: []
   moveDetector: {fileID: 0}
   moveDetectCD:
@@ -7342,9 +7315,10 @@ MonoBehaviour:
   col: {fileID: 5688449048718166462}
   movement: {fileID: 4368476588986683756}
   damageSender: {fileID: 4111563290584003977}
+  pushBackSender: {fileID: 0}
   despawners:
   - {fileID: 8912249808544492934}
-  damageDetector: {fileID: 0}
+  detector: {fileID: 0}
   chargements: []
   moveDetector: {fileID: 0}
   moveDetectCD:
@@ -7553,9 +7527,10 @@ MonoBehaviour:
   col: {fileID: 5217562305644475742}
   movement: {fileID: 4181061535818329484}
   damageSender: {fileID: 4582089398058928489}
+  pushBackSender: {fileID: 0}
   despawners:
   - {fileID: 9022756226936541542}
-  damageDetector: {fileID: 0}
+  detector: {fileID: 0}
   chargements: []
   moveDetector: {fileID: 0}
   moveDetectCD:
@@ -7706,10 +7681,11 @@ MonoBehaviour:
   col: {fileID: 7048791982675921051}
   movement: {fileID: 6711919772422876525}
   damageSender: {fileID: 4662418853747849565}
+  pushBackSender: {fileID: 0}
   despawners:
   - {fileID: 1177153614905397370}
   - {fileID: 5386343808181240711}
-  damageDetector: {fileID: 0}
+  detector: {fileID: 0}
   chargements:
   - {fileID: 1734220956938698220}
   moveDetector: {fileID: 0}

@@ -23,6 +23,7 @@ public class ChargeScale : Chargement
     //===========================================Unity============================================
     protected override void OnDisable()
     {
+        base.OnDisable();
         this.user1.Value.ResetToDefaultScale(this);
     }
 

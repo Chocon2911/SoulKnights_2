@@ -19,6 +19,7 @@ public class DespawnByTime : Despawner
 
     protected override void OnEnable()
     {
+        base.OnEnable();
         this.despawnCD.ResetStatus();
     }
 

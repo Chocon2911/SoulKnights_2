@@ -12,6 +12,7 @@ public class PushBackSender : HuyMonoBehaviour
     [Header("Push Back Sender")]
     [SerializeField] protected InterfaceReference<IPushBackSender> user;
     [SerializeField] protected float force;
+    [SerializeField] protected float duration;
 
     public IPushBackSender User { set => user.Value = value; }
 
@@ -19,6 +20,6 @@ public class PushBackSender : HuyMonoBehaviour
     public void Send(PushBackReceiver receiver)
     {
         Vector2 dir = this.user.Value.GetDir(this);
-        receiver.Receive(this.force, dir);
+        receiver.Receive(this.force, dir, this.duration);
     }
 }
